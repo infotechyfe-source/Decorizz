@@ -1,3 +1,4 @@
+/* eslint-disable react/no-inline-styles */
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X, Heart, ChevronDown } from 'lucide-react';
@@ -46,6 +47,12 @@ export function Navbar() {
   const acrylicTimerRef = useRef<any>(null);
   const shopTimerRef = useRef<any>(null);
   const customDesignsTimerRef = useRef<any>(null);
+
+  const spiritualActive =
+    showFramesDropdown || isActive('/spiritual-art-gallery');
+
+  const decorActive =
+    showDecorDropdown || isActive('/decor-by-room');
 
   const handleShopEnter = () => {
     if (shopTimerRef.current) clearTimeout(shopTimerRef.current);
@@ -220,7 +227,6 @@ export function Navbar() {
       <TopMarquee />
       <nav className={`fixed top-10 left-0 right-0 z-50 transition-all duration-300 ${transparent ? '' : 'shadow-lg shadow-teal-500/10'}`} style={{ background: navBg, borderBottom: navBorder, backdropFilter: 'blur(12px)' }}>
 
-
         <div className="w-full px-4 sm:px-6 xl:px-8">
 
           <div className="flex justify-between items-center h-16">
@@ -251,7 +257,7 @@ export function Navbar() {
                 onMouseLeave={handleShopLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600"
+                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
                     backgroundColor: isActive('/shop') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
@@ -323,18 +329,22 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* Frames Dropdown */}
+              {/* Spritual Art Dropdown */}
               <div
                 className="relative"
                 onMouseEnter={handleFramesEnter}
                 onMouseLeave={handleFramesLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600"
+                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
-                    backgroundColor: isActive('/spiritual-art-gallery') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
+                    backgroundColor: spiritualActive
+                      ? 'white'
+                      : transparent
+                        ? 'rgba(255,255,255,0.2)'
+                        : 'rgba(233, 229, 220, 0.5)',
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
-                    boxShadow: isActive('/spiritual-art-gallery') ? '0 0 0 2px #14b8a6' : 'none',
+                    boxShadow: spiritualActive ? '0 0 0 2px #14b8a6' : 'none',
                     fontWeight: 600,
                     color: '#3b2f27'
                   }}
@@ -406,18 +416,22 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* Decor by Room Dropdown */}
+              {/* Decororative Art Dropdown */}
               <div
                 className="relative"
                 onMouseEnter={handleDecorEnter}
                 onMouseLeave={handleDecorLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600"
+                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
-                    backgroundColor: isActive('/decor-by-room') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
+                    backgroundColor: decorActive
+                      ? 'white'
+                      : transparent
+                        ? 'rgba(255,255,255,0.2)'
+                        : 'rgba(233, 229, 220, 0.5)',
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
-                    boxShadow: isActive('/decor-by-room') ? '0 0 0 2px #14b8a6' : 'none',
+                    boxShadow: decorActive ? '0 0 0 2px #14b8a6' : 'none',
                     fontWeight: 600,
                     color: '#3b2f27'
                   }}
@@ -430,7 +444,6 @@ export function Navbar() {
                     </svg>
                   </span>
                 </button>
-
 
                 {showDecorDropdown && (
                   <div
@@ -500,7 +513,7 @@ export function Navbar() {
                 onMouseLeave={handleNewArtLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm flex items-center gap-1"
+                  className="rounded-full px-4 py-2 text-sm flex items-center gap-1 cursor-pointer"
                   style={{
                     backgroundColor: showNewArtDropdown || isActive('/new-art-gallery') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
@@ -574,18 +587,23 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* Lighting Dropdown */}
+              {/* Neon Dropdown */}
               <div
                 className="relative"
                 onMouseEnter={handleLightingEnter}
                 onMouseLeave={handleLightingLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600"
+                  aria-label='neon'
+                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
-                    backgroundColor: isActive('/lighting') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
+                    backgroundColor: showLightingDropdown
+                      ? 'white'
+                      : transparent
+                        ? 'rgba(255,255,255,0.2)'
+                        : 'rgba(233, 229, 220, 0.5)',
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
-                    boxShadow: isActive('/lighting') ? '0 0 0 2px #14b8a6' : 'none',
+                    boxShadow: showLightingDropdown ? '0 0 0 2px #14b8a6' : 'none',
                     fontWeight: 600,
                     color: '#3b2f27'
                   }}
@@ -666,7 +684,7 @@ export function Navbar() {
                 onMouseLeave={handleCustomDesignsLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600"
+                  className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
                     backgroundColor: showCustomDesignsDropdown ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
@@ -738,21 +756,6 @@ export function Navbar() {
                 )}
               </div>
 
-              {/* <Link
-                to="/shop-by-videos"
-                className="rounded-full px-4 py-2 text-sm"
-                style={{
-                  backgroundColor: isActive('/shop-by-videos') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
-                  backdropFilter: transparent ? 'blur(10px)' : 'none',
-                  boxShadow: isActive('/shop-by-videos') ? '0 0 0 2px #14b8a6' : 'none',
-                  fontWeight: 600,
-                  color: '#3b2f27'
-                }}
-              >
-                Shop by Videos
-              </Link> */}
-
-
               {/* Acrylic Art Gallery Dropdown */}
               <div
                 className="relative"
@@ -760,7 +763,7 @@ export function Navbar() {
                 onMouseLeave={handleAcrylicLeave}
               >
                 <button
-                  className="rounded-full px-4 py-2 text-sm flex items-center gap-1"
+                  className="rounded-full px-4 py-2 text-sm flex items-center gap-1 cursor-pointer"
                   style={{
                     backgroundColor: showAcrylicDropdown || isActive('/acrylic-art-gallery') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
                     backdropFilter: transparent ? 'blur(10px)' : 'none',

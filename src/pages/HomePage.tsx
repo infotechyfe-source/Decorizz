@@ -16,11 +16,6 @@ import "aos/dist/aos.css";
 import { useCategoryImages } from "../utils/useCategoryImages";
 import { OfferPopup } from "../components/OfferPopup";
 
-
-
-
-
-
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, type CarouselApi } from "../components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -885,7 +880,7 @@ export default function HomePage() {
 
               {!isMobile && (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setHomeNewStart(s => (s + (homeNewProducts.length || 1) - 1) % (homeNewProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200">◀</button>
+                  <button onClick={() => setHomeNewStart(s => (s + (homeNewProducts.length || 1) - 1) % (homeNewProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
                   <button onClick={() => setHomeNewStart(s => (s + 1) % (homeNewProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250">▶</button>
                 </div>
               )}
@@ -1138,8 +1133,11 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               {!isMobile && (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200">◀</button>
-                  <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250">▶</button>
+                  <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))} 
+                  aria-label="Previous" 
+                  className="w-10 h-10  p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">◀</button>
+                  <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next" 
+                  className="p-2 rounded-lg bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
                 </div>
               )}
             </div>
@@ -1178,8 +1176,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-
 
       {/* Wall Art Collection Section */}
       <section className="section-wallart relative" aria-label="Wall Art Collection">
@@ -1358,7 +1354,6 @@ export default function HomePage() {
         </div>
       </section >
 
-
       {/* TESTIMONIALS */}
       {
         loading ? (
@@ -1393,9 +1388,9 @@ export default function HomePage() {
                   <span className="text-accent"> People Say</span>
                 </h2>
                 <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
-                  <span className="w-2 h-2 rounded-full" style={{ background: '#14b8a6' }} />
-                  <span className="w-40 border-t-2" style={{ borderColor: '#14b8a6' }} />
-                  <span className="w-2 h-2 rounded-full" style={{ background: '#14b8a6' }} />
+                  <span className="w-2 h-2 rounded-full [background:#14b8a6]"/>
+                  <span className="w-40 border-t-2 [background:#14bb8a6]"/>
+                  <span className="w-2 h-2 rounded-full [background:#14b8a6]"/>
                 </div>
                 <p className="section-subtitle">Real transformations from discerning homeowners who trust Decorizz</p>
               </div>
