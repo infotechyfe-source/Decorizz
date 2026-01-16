@@ -235,9 +235,6 @@ export default function ProductDetailPage() {
     updateThumbScrollState();
   }, [selectedFormat, selectedColor]);
 
-
-
-
   const thumbItems = useMemo(() => {
     const items: Array<{ src: string; alt: string; onClick: () => void; selected: boolean; label?: string }> = [];
     if (!product) return items;
@@ -697,8 +694,6 @@ export default function ProductDetailPage() {
     return value === null ? undefined : value ?? undefined;
   };
 
-
-
   const handleAddToCart = async () => {
     if (!user) {
       toast.error('Please login to add to cart');
@@ -866,7 +861,6 @@ export default function ProductDetailPage() {
     }
   };
 
-
   const mainImage = useMemo(() => {
     if (!product) return "";
 
@@ -896,8 +890,6 @@ export default function ProductDetailPage() {
     if (!product) return 0;
     return computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price;
   }, [selectedSize, selectedFormat, product]);
-
-
 
   // Loading is handled by RouteLoader - no need for individual page spinner
 
@@ -1188,18 +1180,18 @@ export default function ProductDetailPage() {
       {/* Decorative Squares (top) */}
       <div className="flex justify-between max-w-7xl mx-auto px-4 pt-12">
         <div className="flex gap-2">
-          <div className="w-10 h-10 border-2 rounded" style={{ borderColor: '#e5e7eb' }}></div>
-          <div className="w-10 h-10 border-2 rounded" style={{ borderColor: '#e5e7eb' }}></div>
+          <div className="w-10 h-10 border-2 border-gray-200 rounded"></div>
+          <div className="w-10 h-10 border-2 border-gray-200 rounded"></div>
         </div>
 
         <div className="flex gap-2">
-          <div className="w-10 h-10 border-2 rounded" style={{ borderColor: '#e5e7eb' }}></div>
-          <div className="w-10 h-10 border-2 rounded" style={{ borderColor: '#e5e7eb' }}></div>
+          <div className="w-10 h-10 border-2 border-gray-200 rounded "></div>
+          <div className="w-10 h-10 border-2 border-gray-200 rounded" ></div>
         </div>
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-4 pt-6 text-sm flex items-center gap-2" style={{ color: '#4b5563' }}>
+      <div className="max-w-7xl mx-auto px-4 pt-6 text-sm flex items-center gap-2 text-gray-600">
         <Home className="w-4 h-4" color="#6b7280" />
         <Link to="/" className="hover:underline" style={{ color: '#1f2937' }}>Home</Link>
         <ChevronRight className="w-4 h-4" />
@@ -1372,8 +1364,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
-
-
 
             {/* Custom Canvas - Instructions & Photo Upload - Below How it works */}
             {product.isCustomCanvas && (

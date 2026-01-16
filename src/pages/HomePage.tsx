@@ -649,8 +649,8 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               {!isMobile && (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200">◀</button>
-                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250">▶</button>
+                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
+                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
                 </div>
               )}
             </div>
@@ -666,7 +666,9 @@ export default function HomePage() {
                     <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{p.name}</h3>
                     <div className="flex flex-col gap-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400" style={{ textDecoration: 'line-through' }}>₹{Math.round(Number(p.price || 0) * 1.15).toLocaleString('en-IN')}</span>
+                        <span className="text-xs text-gray-400 line-through">
+                          ₹{Math.round(Number(p.price || 0) * 1.15).toLocaleString('en-IN')}
+                        </span>
                         <span className="text-sm text-gray-900">₹{Number(p.price || 0).toLocaleString('en-IN')}</span>
                       </div>
                       <span className="text-green-600 text-[10px] font-medium">Save 15%</span>
@@ -748,8 +750,8 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               {!isMobile && (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setPremiumStart(s => (s + (premiumProducts.length || 1) - 1) % (premiumProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200">◀</button>
-                  <button onClick={() => setPremiumStart(s => (s + 1) % (premiumProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250">▶</button>
+                  <button onClick={() => setPremiumStart(s => (s + (premiumProducts.length || 1) - 1) % (premiumProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
+                  <button onClick={() => setPremiumStart(s => (s + 1) % (premiumProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
                 </div>
               )}
             </div>
@@ -765,7 +767,9 @@ export default function HomePage() {
                     <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{p.name}</h3>
                     <div className="flex flex-col gap-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400" style={{ textDecoration: 'line-through' }}>₹{Math.round(Number(p.price || 0) * 1.15).toLocaleString('en-IN')}</span>
+                        <span className="text-xs text-gray-400 line-through">
+                          ₹{Math.round(Number(p.price || 0) * 1.15).toLocaleString('en-IN')}
+                        </span>
                         <span className="text-sm text-gray-900">₹{Number(p.price || 0).toLocaleString('en-IN')}</span>
                       </div>
                       <span className="text-green-600 text-[10px] font-medium">Save 15%</span>
@@ -1133,11 +1137,11 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               {!isMobile && (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))} 
-                  aria-label="Previous" 
-                  className="w-10 h-10  p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next" 
-                  className="p-2 rounded-lg bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
+                  <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))}
+                    aria-label="Previous"
+                    className="w-10 h-10  p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">◀</button>
+                  <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next"
+                    className="p-2 rounded-lg bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
                 </div>
               )}
             </div>
@@ -1388,9 +1392,9 @@ export default function HomePage() {
                   <span className="text-accent"> People Say</span>
                 </h2>
                 <div className="flex items-center justify-center gap-3 mb-3" aria-hidden="true">
-                  <span className="w-2 h-2 rounded-full [background:#14b8a6]"/>
-                  <span className="w-40 border-t-2 [background:#14bb8a6]"/>
-                  <span className="w-2 h-2 rounded-full [background:#14b8a6]"/>
+                  <span className="w-2 h-2 rounded-full [background:#14b8a6]" />
+                  <span className="w-40 border-t-2 [background:#14bb8a6]" />
+                  <span className="w-2 h-2 rounded-full [background:#14b8a6]" />
                 </div>
                 <p className="section-subtitle">Real transformations from discerning homeowners who trust Decorizz</p>
               </div>
