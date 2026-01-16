@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Block admin pages
+Disallow: /admin
+Disallow: /admin/*
+
+# Block cart and checkout (personal data)
+Disallow: /cart
+Disallow: /checkout
+
+# Sitemap location
+Sitemap: https://decorizz.com/sitemap.xml

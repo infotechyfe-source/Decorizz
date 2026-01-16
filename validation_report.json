@@ -1,0 +1,45 @@
+{
+  "imageMap": {
+    "Portrait": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768284977/products/1766496852689-drqz5wdiu.webp",
+      "id": "1766495335995-w570vx5h1",
+      "name": "Vighnaharta Ganesha – Spiritual Wall Art"
+    },
+    "Circle": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768284981/products/1767089219566-ndy6b58o3.webp",
+      "id": "1767089227846-vte1t6mj8",
+      "name": "Artistic Soul"
+    },
+    "2 Set": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768285024/products/1766496281718-o4c8c264x.webp",
+      "id": "1766496284043-mh23hu8gb",
+      "name": "Minimal Botanical Harmony – Set of 2 Wall Art"
+    },
+    "Landscape": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768285120/products/1767089247335-wgixwrorb.webp",
+      "id": "1767089269137-k6n9j18v7",
+      "name": "Abstract Studio Scene"
+    },
+    "Square": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768283502/products/1767095404475-c0v585yko.webp",
+      "id": "1767093035374-vzaxspvua",
+      "name": "Chai Ki Tapri"
+    },
+    "3 Set": {
+      "url": "https://res.cloudinary.com/dxpabpzkf/image/upload/f_auto,q_auto/v1768286795/products/1765611579442-adnecvly7.webp",
+      "id": "1765611582109-pm9n0lsop",
+      "name": "Neutral Abstract Textures"
+    }
+  },
+  "brokenCategories": [
+    "2-Set",
+    "3-Set"
+  ],
+  "supabaseCount": 16,
+  "cloudinaryCount": 184,
+  "supabaseExamples": [
+    "https://wievhaxedotrhktkjupg.supabase.co/storage/v1/object/public/make-52d68140-gallery/products/1768294878702-006hpbekc.jpg",
+    "https://wievhaxedotrhktkjupg.supabase.co/storage/v1/object/public/make-52d68140-gallery/products/1765613403957-5v9lclmf0.webp",
+    "https://wievhaxedotrhktkjupg.supabase.co/storage/v1/object/public/make-52d68140-gallery/products/1765614009852-5lu0gbx2i.webp"
+  ]
+}
