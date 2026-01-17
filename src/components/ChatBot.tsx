@@ -406,7 +406,8 @@ export function ChatBot() {
                             placeholder="Type your message..."
                             className="flex-1 px-4 py-3 rounded-xl bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-teal/20 focus:bg-white transition-all duration-200 border border-transparent focus:border-teal"
                         />
-                        <button
+                        <button 
+                            aria-label='sendmessage'
                             onClick={() => handleSendMessage(inputValue)}
                             disabled={!inputValue.trim()}
                             className={`w-14 h-10 rounded-xl flex items-center justify-center text-white transition-all duration-200 ${inputValue.trim()

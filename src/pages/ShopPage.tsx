@@ -365,8 +365,6 @@ export default function ShopPage() {
   const categoryCounts = useMemo(() => getCategoryCounts(), [products]);
   const categoryNames = Object.keys(categoryCounts).sort();
 
-
-
   const toggleFilter = (filterType: string, value: string) => {
     setFilters(prev => {
       const currentValues = prev[filterType as keyof typeof prev] as string[];
@@ -402,8 +400,6 @@ export default function ShopPage() {
     filters.colors.length +
     filters.materials.length +
     filters.categories.length;
-
-
 
   const filteredProducts = useMemo(() => {
     // 🔹 Start from shuffled list instead of original
@@ -463,9 +459,6 @@ export default function ShopPage() {
 
     return result;
   }, [shuffledProducts, filters]);
-
-
-
 
   const finalFilteredProducts = useMemo(() => {
     return filteredProducts.filter(p => {
@@ -542,7 +535,7 @@ export default function ShopPage() {
               <h1 className="text-center custom-heading">
                 Shop All <span className="text-gradient-teal">Frames</span>
               </h1>
-              <p className="text-center max-w-3xl mx-auto italic text-base sm:text-lg" style={{ color: "#4b5563" }}>
+              <p className="text-center max-w-3xl mx-auto italic text-base sm:text-lg text-[#4b5563]">
                 Explore our complete collection of curated frames for every style and space.
               </p>
             </div>
@@ -551,8 +544,7 @@ export default function ShopPage() {
 
         <div className="flex gap-8 items-start">
           {/* Filters Sidebar */}
-          {/* Filters Sidebar */}
-          <div className={`${showFilters ? 'block' : 'hidden'} lg:block lg:w-64 lg:flex-shrink-0`}>
+          <div className={`${showFilters ? 'block' : 'hidden'} lg:block lg:w-64 lg:shrink-0`}>
             {/* Mobile Overlay */}
             <div
               className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
@@ -561,21 +553,15 @@ export default function ShopPage() {
 
             {/* Filter Panel */}
             <div
-              className="
-                lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto
-                max-lg:fixed max-lg:inset-0 max-lg:overflow-y-auto max-lg:top-0
-                lg:rounded-3xl max-lg:rounded-none shadow-2xl flex flex-col z-50 custom-scrollbar
-                lg:bg-white/100 lg:backdrop-blur-md max-lg:bg-white max-lg:w-full max-lg:h-full
-              "
-              style={{ border: '1px solid #e5e7eb' }}
-            >
+              className="lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto max-lg:relative max-lg:w-full max-lg:h-auto max-lg:overflow-visible rounded-3xl shadow-2xl flex flex-col bg-white backdrop-blur-md border border-gray-200 custom-scrollbar ">
+
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: '#e5e7eb' }}>
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-gradient-to-br from-teal-500 to-blue-500 rounded-lg lg:hidden">
                     <Filter className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold" style={{ color: '#1f2937' }}>
+                  <h2 className="text-xl font-bold text-[#1f2937]">
                     Filters
                   </h2>
                   {activeFilterCount > 0 && (
@@ -711,6 +697,7 @@ export default function ShopPage() {
                   <h3 className="mb-3" style={{ fontWeight: 700, color: '#1f2937' }}>Price Range</h3>
                   <div className="space-y-2">
                     <input
+                      aria-label='form'
                       type="range"
                       min="0"
                       max="10000"
@@ -765,8 +752,8 @@ export default function ShopPage() {
             {/* Sort */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
 
-              <p style={{ fontWeight: 500, color: '#6b7280' }}>
-                <span style={{ color: '#14b8a6', fontWeight: 700 }}>
+              <p className="font-medium text-gray-500">
+                <span className="font-bold text-teal-500">
                   {filteredProducts.length}
                 </span>
                 {" "}products found
@@ -794,7 +781,7 @@ export default function ShopPage() {
                   </button>
 
                   {showShopDropdown && (
-                    <div className="absolute left-0 mt-2 w-[720px] max-w-[90vw] rounded-2xl shadow-xl border border-gray-100 backdrop-blur-md z-30" style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}>
+                    <div className="absolute left-0 mt-2 w-180 max-w-[90vw] rounded-2xl shadow-xl border border-gray-100 backdrop-blur-md z-30" style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}>
                       <div className="px-6 py-6">
                         <div className="flex justify-between items-center mb-4">
                           <h3 className="text-lg font-bold text-teal-600">Shop Collections</h3>
@@ -811,7 +798,7 @@ export default function ShopPage() {
                             <Link
                               key={item.label}
                               to={item.to}
-                              className="group flex flex-col items-center gap-3 p-3 rounded-xl hover:bg-white/50 transition-all duration-300"
+                              className="group flex flex-col items-center gap-3 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 cursor-pointer"
                               onClick={() => setShowShopDropdown(false)}
                               style={{ opacity: 0, animation: `fadeSlideUp 0.5s ease forwards ${idx * 0.1}s` }}
                             >

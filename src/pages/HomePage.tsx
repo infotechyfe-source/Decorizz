@@ -639,7 +639,7 @@ export default function HomePage() {
       </section>
 
       {/* Best Sellers Section */}
-      <section className="section-collections relative" aria-label="Best Sellers" style={{ backgroundColor: '#faf7f4' }}>
+      <section className="section-collections relative bg-[#faf7f4]" aria-label="Best Sellers">
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -740,7 +740,7 @@ export default function HomePage() {
 
       {/* Shop by Category Section */}
       {/* Premium Collection */}
-      <section className="section-collections relative" aria-label="Premium Collection" style={{ backgroundColor: '#fef3c7' }}>
+      <section className="section-collections relative bg-[#fef3c7]" aria-label="Premium Collection">
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -873,7 +873,7 @@ export default function HomePage() {
       </section>
 
       {/* New Arrivals */}
-      <section className="section-collections relative" aria-label="New Arrivals" style={{ backgroundColor: '#e0f2fe' }}>
+      <section className="section-collections relative bg-[#e0f2fe]" aria-label="New Arrivals">
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -885,7 +885,7 @@ export default function HomePage() {
               {!isMobile && (
                 <div className="flex items-center gap-2">
                   <button onClick={() => setHomeNewStart(s => (s + (homeNewProducts.length || 1) - 1) % (homeNewProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setHomeNewStart(s => (s + 1) % (homeNewProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250">▶</button>
+                  <button onClick={() => setHomeNewStart(s => (s + 1) % (homeNewProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
                 </div>
               )}
             </div>
@@ -924,7 +924,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
 
       {/* Watch & Buy Section - Instagram Reels Style */}
       <section className="section-watch relative py-12 md:py-16" aria-label="Watch and Buy">
@@ -1127,7 +1126,7 @@ export default function HomePage() {
       </section>
 
       {/* Budget Finds */}
-      <section className="section-collections relative" aria-label="Budget Finds" style={{ backgroundColor: '#f1f5f9' }}>
+      <section className="section-collections relative bg-[#f1f5f9]" aria-label="Budget Finds">
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -1479,12 +1478,17 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+
           </section>
         ) : faqs.length > 0 && (
-          <section className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20 relative overflow-hidden" aria-label="Explore Our Frame Collection" style={{
-            background: "linear-gradient(135deg, #f5f2e9 0%)",
-            backdropFilter: "blur(2px)",
-          }}>
+          <section
+            className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20
+             relative overflow-hidden
+             bg-[linear-gradient(135deg,_#f5f2e9_0%)]
+             backdrop-blur-sm"
+            aria-label="Explore Our Frame Collection"
+          >
+
             <div className="max-w-7xl mx-auto px-4">
               <h2 className="section-title-themed text-center mb-10">
                 <span className="text-brand">Frequently</span>
@@ -1504,13 +1508,16 @@ export default function HomePage() {
                         setOpenFaq(isOpen ? null : f.id);
                       }}
                     >
-                      <summary className="faq-summary" aria-expanded={isOpen}>
+                      <summary className="faq-summary">
                         <span className="faq-icon faq-icon-animated">
                           <span className={`plus ${isOpen ? "hidden" : "inline"}`}>+</span>
                           <span className={`minus ${isOpen ? "inline" : "hidden"}`}>−</span>
                         </span>
-                        <span className="faq-question">{String(f.question).toUpperCase()}</span>
+                        <span className="faq-question">
+                          {String(f.question).toUpperCase()}
+                        </span>
                       </summary>
+
 
                       {isOpen && (
                         <div className="faq-answer">
