@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, X, Send, Bot, User, Sparkles, ShoppingBag, Truck, CreditCard, HelpCircle, Phone } from 'lucide-react';
+import { MessageCircle, X, Send, MessageCircleQuestion, User, Sparkles, ShoppingBag, Truck, CreditCard, HelpCircle, Phone } from 'lucide-react';
 
 interface Message {
     id: string;
@@ -256,7 +256,7 @@ export function ChatBot() {
                 className={`fixed left-6 bottom-24 z-0 max-w-62.5 bg-white p-4 rounded-xl shadow-xl transition-all duration-500 transform origin-bottom-left border border-gray-100 ${showGreeting && !isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}`}
             >
                 <button
-                aria-label='close'
+                    aria-label='close'
                     onClick={handleCloseGreeting}
                     className="absolute -top-2 -right-2 w-6 h-6 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 shadow-sm transition-colors cursor-pointer"
                 >
@@ -285,7 +285,7 @@ export function ChatBot() {
                 style={{ zIndex: 9999, cursor: 'pointer', bottom: '16px', left: '16px' }}
                 aria-label="Open chat"
             >
-                <Bot className="w-8 h-8 text-white" />
+                <MessageCircleQuestion className="w-8 h-8 text-white" />
             </button>
 
             {/* Chat Window */}
@@ -304,26 +304,34 @@ export function ChatBot() {
             >
                 {/* Header */}
                 <div
-                    className="p-4 flex items-center justify-between bg-teal"
-                    style={{ background: 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)' }}
+                    className="p-4 flex items-center justify-between
+             bg-linear-to-br from-teal-600 to-emerald-500
+             text-white rounded-t-2xl shadow-md"
                 >
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                            <Bot className="w-6 h-6 text-white" />
+                        <div className="w-10 h-10 rounded-full
+                    bg-white/20 backdrop-blur
+                    flex items-center justify-center
+                    shadow-sm">
+                            <MessageCircleQuestion className="w-5.5 h-5.5 text-white" />
                         </div>
-                        <div>
-                            <h3 className="text-white font-bold text-lg">Deco</h3>
-                            <p className="text-white/80 text-xs">Decorizz Assistant</p>
+
+                        <div className="leading-tight">
+                            <h3 className="font-semibold text-base">Deco</h3>
+                            <p className="text-xs text-white/80 font-medium">
+                                Decorizz Assistant
+                            </p>
                         </div>
                     </div>
+
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-2 rounded-full transition-all duration-200 bg-white/20 hover:bg-red-500 group cursor-pointer"
-                        aria-label="Close chat"
-                    >
-                        <X className="w-5 h-5 text-white" />
+                        className="group p-2 rounded-full bg-white/15 backdrop-blur transition-all duration-200 hover:bg-red-500 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer"
+                        aria-label="Close chat">
+                        <X className="w-5 h-5 text-white group-hover:rotate-90 transition-transform" />
                     </button>
                 </div>
+
 
                 {/* Messages */}
                 <div
@@ -337,7 +345,7 @@ export function ChatBot() {
                         >
                             {message.isBot && (
                                 <div className="w-8 h-8 rounded-full bg-teal flex items-center justify-center shrink-0 shadow-sm">
-                                    <Bot className="w-4 h-4 text-white" />
+                                    <MessageCircleQuestion className="w-4 h-4 text-white" />
                                 </div>
                             )}
                             <div
@@ -363,7 +371,7 @@ export function ChatBot() {
                     {isTyping && (
                         <div className="flex items-end gap-2">
                             <div className="w-8 h-8 rounded-full bg-teal flex items-center justify-center shadow-sm">
-                                <Bot className="w-4 h-4 text-white" />
+                                <MessageCircleQuestion className="w-4 h-4 text-white" />
                             </div>
                             <div className="bg-white p-4 rounded-xl shadow-sm">
                                 <div className="flex gap-1">
@@ -379,22 +387,27 @@ export function ChatBot() {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="px-4 py-3 bg-white border-t border-gray-100">
+                <div className="px-4 py-3 bg-white border border-gray-200">
                     <div className="flex flex-wrap gap-2">
                         {quickActions.map((action, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleQuickAction(action.query)}
-                                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-gray-50 border border-gray-200 text-xs font-medium text-gray-600 transition-all duration-200 hover:bg-teal hover:text-white hover:border-teal hover:shadow-md cursor-pointer">
-                                {action.icon}
-                                {action.label}
+                                className="group flex items-center gap-2 px-3.5 py-2 rounded-full
+                               bg-white border border-gray-200 text-xs font-medium text-gray-700 shadow-sm transition-all duration-200 hover:bg-linear-to-r hover:from-teal-600 hover:to-emerald-500 hover:text-white hover:border-transparent hover:shadow-md focus:outline-none focus:ring-2
+              focus:ring-teal-500/40 cursor-pointer">
+                                <span className="text-gray-500 group-hover:text-white transition">
+                                    {action.icon}
+                                </span>
+                                <span>{action.label}</span>
                             </button>
+
                         ))}
                     </div>
                 </div>
 
                 {/* Input */}
-                <div className="p-4 bg-white border-t border-gray-100">
+                <div className="p-4 bg-white border-t border-gray-200">
                     <div className="flex items-center gap-3">
                         <input
                             ref={inputRef}
@@ -405,17 +418,22 @@ export function ChatBot() {
                             placeholder="Type your message..."
                             className="flex-1 px-4 py-3 rounded-xl bg-gray-50 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-teal/20 focus:bg-white transition-all duration-200 border border-transparent focus:border-teal"
                         />
-                        <button 
-                            aria-label='sendmessage'
+                        <button
+                            aria-label="Send message"
                             onClick={() => handleSendMessage(inputValue)}
                             disabled={!inputValue.trim()}
-                            className={`w-14 h-10 rounded-xl flex items-center justify-center text-white transition-all duration-200 ${inputValue.trim()
-                                ? 'bg-teal hover:bg-teal-600 hover:scale-105 shadow-md hover:shadow-lg cursor-pointer'
-                                : 'bg-teal/40 cursor-not-allowed'
+                            className={`w-14 h-10 rounded-xl flex items-center justify-center
+              text-white transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-teal-500/40
+              ${inputValue.trim()
+                                    ? "bg-linear-to-r from-emerald-600 to-teal-500 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
+                                    : "bg-teal-400/40 cursor-not-allowed"
                                 }`}
                         >
-                            <Send className="w-5 h-5" />
+                            <Send className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
                         </button>
+
+
                     </div>
                 </div>
             </div>

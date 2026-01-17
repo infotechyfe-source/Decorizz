@@ -55,9 +55,10 @@ export default function LoginPage() {
               <img src={logo} className="w-20 mb-2 animate-float" alt="logo" />
             </Link>
 
-            <h1 className="custom-heading" style={{ color: '#1f2937' }}>
+            <h1 className="custom-heading text-2xl font-semibold tracking-tight bg-linear-to-br from-green-400 to-green-500 bg-clip-text">
               Sign in to your account
             </h1>
+
           </div>
 
           {/* FORM */}
@@ -74,7 +75,7 @@ export default function LoginPage() {
                 required
                 className="w-full px-4 py-3 glow-input transition"
                 style={{ color: '#1f2937' }}
-                placeholder="you@example.com"
+                placeholder="user@example.com"
               />
             </div>
 

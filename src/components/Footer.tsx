@@ -33,7 +33,7 @@ export function Footer() {
               <p className="text-sm" style={{ color: subText }}>Subscribe to get new arrivals and offers</p>
               <div className="flex gap-2">
                 <input type="email" placeholder="Your email" className="flex-1 px-3 py-2 rounded-lg border" style={{ borderColor: border, backgroundColor: isDarkTheme ? '#0b1220' : '#ffffff', color: text }} />
-                <button className="px-4 py-2 rounded-lg text-white" style={{ backgroundColor: accent }}>Subscribe</button>
+                <button className="px-4 py-2 rounded-lg text-white cursor-pointer" style={{ backgroundColor: accent }}>Subscribe</button>
               </div>
             </div>
           </div>
@@ -66,7 +66,7 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-center gap-3">
                 <a href="tel:+919705180483" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
@@ -77,7 +77,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <a href="mailto:info@decorizz.com" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
@@ -88,7 +88,7 @@ export function Footer() {
               </li>
               <li className="flex items-start gap-3">
                 <a href="https://www.google.com/maps/search/?api=1&query=Shakti+farm+market+Sitarganj+Udham+Singh+Nagar" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 hover:opacity-80 transition-opacity">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#14b8a6', color: '#fff' }}>
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
