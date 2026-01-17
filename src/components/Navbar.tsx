@@ -275,7 +275,7 @@ export function Navbar() {
                 </button>
                 {showShopDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleShopEnter}
                     onMouseLeave={handleShopLeave}

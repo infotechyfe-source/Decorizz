@@ -558,7 +558,7 @@ export default function ShopPage() {
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-teal-500 to-blue-500 rounded-lg lg:hidden">
+                  <div className="p-2 bg-linear-to-br from-teal-500 to-blue-500 rounded-lg lg:hidden">
                     <Filter className="w-5 h-5 text-white" />
                   </div>
                   <h2 className="text-xl font-bold text-[#1f2937]">
