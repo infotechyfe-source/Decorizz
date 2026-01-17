@@ -47,7 +47,7 @@ export default function LoginPage() {
     <div className="min-h-screen content-offset">
       <Navbar />
       <div className="min-h-screen content-offset flex items-center justify-center p-4 premium-bg">
-        <div className="premium-card-glow p-8 w-full max-w-md animate-fade-scale">
+        <div className="premium-card-glow p-8 w-full max-w-md animate-fade-scale ">
 
           {/* LOGO + BRAND */}
           <div className="text-center mb-8">
