@@ -358,7 +358,7 @@ export function Navbar() {
                 </button>
                 {showFramesDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleFramesEnter}
                     onMouseLeave={handleFramesLeave}
@@ -447,7 +447,7 @@ export function Navbar() {
 
                 {showDecorDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleDecorEnter}
                     onMouseLeave={handleDecorLeave}
@@ -457,7 +457,7 @@ export function Navbar() {
 
                         <Link
                           to="/decor-by-room"
-                          className="text-teal-600 hover:text-teal-700 font-semibold flex items-center gap-1 group text-teal-500 ml-6"
+                          className="text-teal-600 hover:text-teal-700 font-semibold flex items-center gap-1 group ml-6"
                         >
                           View All Rooms
                           <svg className="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
@@ -529,7 +529,7 @@ export function Navbar() {
 
                 {showNewArtDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleNewArtEnter}
                     onMouseLeave={handleNewArtLeave}
@@ -619,7 +619,7 @@ export function Navbar() {
 
                 {showLightingDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleLightingEnter}
                     onMouseLeave={handleLightingLeave}
@@ -629,7 +629,7 @@ export function Navbar() {
 
                         <Link
                           to="/lighting"
-                          className="text-teal-600 hover:text-teal-700 font-semibold flex items-center gap-1 group text-teal-500 ml-6"
+                          className="text-teal-600 hover:text-teal-700 font-semibold flex items-center gap-1 group ml-6"
                         >
                           View All Lighting
                           <svg className="w-4 h-4 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
@@ -703,7 +703,7 @@ export function Navbar() {
 
                 {showCustomDesignsDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleCustomDesignsEnter}
                     onMouseLeave={handleCustomDesignsLeave}
@@ -779,7 +779,7 @@ export function Navbar() {
 
                 {showAcrylicDropdown && (
                   <div
-                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-[999]"
+                    className="fixed left-0 right-0 top-16 backdrop-blur-md shadow-xl border-t border-gray-100 animate-fadeIn z-999"
                     style={{ background: 'linear-gradient(180deg, #f8fffe 0%, #faf9f5 100%)' }}
                     onMouseEnter={handleAcrylicEnter}
                     onMouseLeave={handleAcrylicLeave}
@@ -926,7 +926,7 @@ export function Navbar() {
               {user ? (
                 <div className="relative group hidden md:flex">
                   <button
-                    className="inline-flex items-center gap-2  p-2 rounded-lg transition bg-teal-600"
+                    className="inline-flex items-center gap-2  p-2 rounded-lg transition bg-teal-600 cursor-pointer"
                     style={{ color: navIconColor }}
                   >
                     <User className="w-5 h-5 text-white" />
@@ -1058,7 +1058,7 @@ export function Navbar() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all text-gray-800 placeholder-gray-400 text-gray-900"
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all  placeholder-gray-400 text-gray-900"
               />
               <Search className="w-5 h-5 text-gray-400 absolute ml-2" />
               <button

@@ -299,8 +299,8 @@ export default function CartPage() {
 
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+        <div className="absolute top-0 right-0 w-125 h-125 bg-teal-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-125 h-125 bg-amber-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
         {/* Animated Shapes */}
         <div className="flex gap-2">
@@ -356,7 +356,7 @@ export default function CartPage() {
                           toast.success('Cart cleaned up');
                           window.location.reload(); // Force reload to ensure fresh state
                         }}
-                        className="text-red-500 hover:text-red-700 text-sm font-semibold flex items-center gap-2 px-3 py-1 rounded-lg border border-red-200 hover:bg-red-50 transition-colors"
+                        className="text-red-500 hover:text-red-700 text-sm font-semibold flex items-center gap-2 px-3 py-1 rounded-lg border border-red-200 hover:bg-red-50 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                         Remove {invalidItems.length} Unknown Item{invalidItems.length !== 1 ? 's' : ''}
@@ -390,7 +390,7 @@ export default function CartPage() {
                     <div className="flex gap-4">
 
                       {/* Image */}
-                      <div className="w-24 h-24 curved-lg overflow-hidden flex-shrink-0 shadow-premium relative" style={{ backgroundColor: '#f9fafb' }}>
+                      <div className="w-24 h-24 curved-lg overflow-hidden shrink-0 shadow-premium relative" style={{ backgroundColor: '#f9fafb' }}>
                         {displayImage ? (
                           <ImageWithFallback
                             src={isBase64Image ? displayImage : optimizeImage(displayImage, 256)}
@@ -453,7 +453,7 @@ export default function CartPage() {
 
                         <button
                           onClick={() => removeItem(item.productId)}
-                          className="text-red-500 hover:text-red-600 p-2 curved-md hover:bg-red-50 transition"
+                          className="text-red-500 hover:bg-red-600 p-2 curved-md hover:text-red-50 transition cursor-pointer"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -464,7 +464,7 @@ export default function CartPage() {
                         >
                           <button
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                            className="p-2 curved-md hover:bg-gray-100 transition"
+                            className="p-2 curved-md hover:bg-gray-100 transition cursor-pointer"
                           >
                             <Minus className="w-4 h-4" color="#6b7280" />
                           </button>
@@ -473,7 +473,7 @@ export default function CartPage() {
 
                           <button
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                            className="p-2 curved-md hover:bg-gray-100 transition"
+                            className="p-2 curved-md hover:bg-gray-100 transition cursor-pointer"
                           >
                             <Plus className="w-4 h-4" color="#6b7280" />
                           </button>
@@ -523,7 +523,7 @@ export default function CartPage() {
                         <button
                           onClick={handleApplyCoupon}
                           disabled={couponLoading || !couponCode}
-                          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
                           {couponLoading ? '...' : 'Apply'}
                         </button>
@@ -606,15 +606,13 @@ export default function CartPage() {
                       }
                     });
                   }}
-                  className="w-full py-4 bg-teal-600 text-white rounded-xl font-bold text-lg hover:bg-teal-700 shadow-lg shadow-teal-600/20 transition-all hover:-translate-y-0.5"
+                  className="w-full py-4 bg-teal-600 text-white rounded-xl font-bold text-lg hover:bg-teal-700 shadow-lg shadow-teal-600/20 transition-all hover:-translate-y-0.5 cursor-pointer"
                 >
                   Proceed to Checkout
                 </button>
-
-
                 <button
                   onClick={() => navigate('/shop')}
-                  className="w-full curved-xl px-6 py-3 transition glow-btn-white font-medium mt-4"
+                  className="w-full curved-xl px-6 py-3 transition glow-btn-white font-medium mt-4 cursor-pointer"
                   style={{ color: '#1f2937', border: '1px solid rgba(20, 184, 166, 0.2)' }}
                 >
                   Continue Shopping

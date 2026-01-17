@@ -1445,10 +1445,6 @@ export default function ProductDetailPage() {
 
           </div>
 
-
-
-
-
           {/* Product Info */}
           <div
             className="max-h-[80vh] overflow-y-auto pr-2"
@@ -1505,10 +1501,10 @@ export default function ProductDetailPage() {
                 <p className="text-sm" style={{ color: '#6b7280' }}>
                   Tax included. <Link to="/terms" className="underline" style={{ color: '#4b5563' }}>Shipping</Link> calculated at checkout.
                 </p>
-                <button className="p-2 rounded-lg border" style={{ borderColor: '#d1d5db', backgroundColor: 'white' }} onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success('Link copied'); }} title="Copy Link">
+                <button className="p-2 rounded-lg border cursor-pointer" style={{ borderColor: '#d1d5db', backgroundColor: 'white' }} onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success('Link copied'); }} title="Copy Link">
                   <Copy className="w-5 h-5" color="#6b7280" />
                 </button>
-                <button className="p-2 rounded-lg border" style={{ borderColor: '#d1d5db', backgroundColor: 'white' }} onClick={() => { if (navigator.share) { navigator.share({ title: product.name, url: window.location.href }).catch(() => { }); } else { toast.info('Use copy to share'); } }} title="Share">
+                <button className="p-2 rounded-lg border cursor-pointer" style={{ borderColor: '#d1d5db', backgroundColor: 'white' }} onClick={() => { if (navigator.share) { navigator.share({ title: product.name, url: window.location.href }).catch(() => { }); } else { toast.info('Use copy to share'); } }} title="Share">
                   <Share2 className="w-5 h-5" color="#6b7280" />
                 </button>
               </div>
@@ -1531,7 +1527,7 @@ export default function ProductDetailPage() {
                 <div>
 
                   <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
-                  <div className="flex flex-wrap gap-3 rounded-lg">
+                  <div className="flex flex-wrap gap-3 rounded-lg ">
                     {(['Canvas'] as const)
                       .map((fmt) => {
                         const available = computePriceFor(selectedSize, fmt, product.subsection) !== undefined;
@@ -1539,7 +1535,7 @@ export default function ProductDetailPage() {
                           <button
                             key={fmt}
                             onClick={() => available && setSelectedFormat(fmt)}
-                            className={`px-4 py-1 rounded-lg border-2 transition ${selectedFormat === fmt ? 'border-teal-500 bg-teal text-white'
+                            className={`px-4 py-1 rounded-lg border-2 transition ${selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer'
                               : ''
                               } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
                             style={{ borderColor: selectedFormat === fmt ? undefined : '#d1d5db', color: selectedFormat === fmt ? undefined : '#374151' }}
@@ -1548,21 +1544,11 @@ export default function ProductDetailPage() {
                           >
                             {fmt}
                           </button>
-
-
                         );
-
-
                       })}
-
-
                   </div>
-
                 </div>
               )}
-
-
-
             </div>
 
             {/* Sizes */}
@@ -1577,7 +1563,7 @@ export default function ProductDetailPage() {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-1 rounded-lg border-2 transition ${selectedSize === size
+                      className={`px-4 py-1 rounded-lg border-2 cursor-pointer transition ${selectedSize === size
                         ? 'border-teal-500 bg-teal text-white'
                         : ''
                         }`}
@@ -1626,7 +1612,7 @@ export default function ProductDetailPage() {
                               setSelectedColor('');
                             }
                           }}
-                          className={`px-4 py-1 rounded-lg border-2 transition ${isActive ? 'border-teal-500 bg-teal text-white' : ''
+                          className={`px-4 py-1 rounded-lg border-2 transition cursor-pointer ${isActive ? 'border-teal-500 bg-teal text-white' : ''
                             } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
                           style={{ borderColor: isActive ? undefined : '#d1d5db', color: isActive ? undefined : '#374151' }}
                           disabled={!available}
@@ -1663,15 +1649,13 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-
-
             {/* Quantity */}
             <div className="mb-3">
               <h3 className="mb-2" style={{ color: '#1f2937' }}>Quantity</h3>
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-8 h-8 rounded-lg border hover:bg-gray-50"
+                  className="w-8 h-8 rounded-lg border hover:bg-gray-50 cursor-pointer"
                   style={{ borderColor: '#d1d5db', color: '#374151' }}
                 >
                   -
@@ -1679,9 +1663,8 @@ export default function ProductDetailPage() {
                 <span className="text-lg font-semibold" style={{ color: '#1f2937' }}>{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-8 h-8 rounded-lg border hover:bg-gray-50"
-                  style={{ borderColor: '#d1d5db', color: '#374151' }}
-                >
+                  className="w-8 h-8 rounded-lg border hover:bg-gray-50 cursor-pointer"
+                  style={{ borderColor: '#d1d5db', color: '#374151' }}>
                   +
                 </button>
               </div>
@@ -1693,7 +1676,7 @@ export default function ProductDetailPage() {
               {/* Add to Cart */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 px-10 py-3 rounded-xl transition-all duration-200 tracking-widest hover:bg-gray-50"
+                className="flex-1 px-10 py-3 rounded-xl transition-all duration-200 tracking-widest hover:bg-gray-50 cursor-pointer"
                 style={{ border: '1px solid #d1d5db', backgroundColor: 'transparent', color: '#374151', fontWeight: 700 }}
               >
                 <div className="flex gap-2 items-center justify-center">
@@ -1705,7 +1688,7 @@ export default function ProductDetailPage() {
               {/* Buy Now */}
               <button
                 onClick={handleBuyNow}
-                className="flex-1 px-10 py-3 rounded-xl text-black font-semibold transition-all duration-200 tracking-widest"
+                className="flex-1 px-10 py-3 rounded-xl text-black font-semibold transition-all duration-200 tracking-widest cursor-pointer"
                 style={{ backgroundColor: '#14b8a6', color: '#0b1220', fontWeight: 700 }}
               >
                 BUY NOW
@@ -1717,7 +1700,7 @@ export default function ProductDetailPage() {
                 className={`
                         w-12 h-12 rounded-xl border-2 
                         flex items-center justify-center
-                        transition-all duration-200
+                        transition-all duration-200 cursor-pointer
                         ${isInWishlist
                     ? 'border-red-400 bg-red-50 hover:bg-red-100'
                     : 'border-gray-300 hover:border-teal-500 hover:bg-teal-50'
