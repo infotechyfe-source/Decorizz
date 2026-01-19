@@ -80,7 +80,7 @@ function SortDropdown({ value, onChange }) {
 }
 
 // Custom Lighting Categories - matches Neon Sign navbar dropdown
-const LIGHTING_CATEGORIES = ['Gods', 'Cafe', 'Gym', 'Car', 'Gaming', 'Wings', 'Kids', 'Christmas', 'Restaurant and Bar'];
+const LIGHTING_CATEGORIES = ['Gods', 'Cafe', 'Gym', 'Car', 'Gaming', 'Wings', 'Kids', 'Christmas'];
 
 // Simple Fisher–Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, X, Send, MessageCircleQuestion, User, Sparkles, ShoppingBag, Truck, CreditCard, HelpCircle, Phone } from 'lucide-react';
+import {X, Send, MessageCircleQuestion, User, Sparkles, ShoppingBag, Truck, CreditCard, HelpCircle, Phone, MessagesSquareIcon, MessageSquareIcon } from 'lucide-react';
 
 interface Message {
     id: string;
@@ -285,7 +285,7 @@ export function ChatBot() {
                 style={{ zIndex: 9999, cursor: 'pointer', bottom: '16px', left: '16px' }}
                 aria-label="Open chat"
             >
-                <MessageCircleQuestion className="w-8 h-8 text-white" />
+                <MessagesSquareIcon className="w-8 h-8 text-white" />
             </button>
 
             {/* Chat Window */}
@@ -313,7 +313,7 @@ export function ChatBot() {
                     bg-white/20 backdrop-blur
                     flex items-center justify-center
                     shadow-sm">
-                            <MessageCircleQuestion className="w-5.5 h-5.5 text-white" />
+                            <MessageSquareIcon className="w-5.5 h-5.5 text-white" />
                         </div>
 
                         <div className="leading-tight">
@@ -345,7 +345,7 @@ export function ChatBot() {
                         >
                             {message.isBot && (
                                 <div className="w-8 h-8 rounded-full bg-teal flex items-center justify-center shrink-0 shadow-sm">
-                                    <MessageCircleQuestion className="w-4 h-4 text-white" />
+                                    <MessageSquareIcon className="w-4 h-4 text-white" />
                                 </div>
                             )}
                             <div

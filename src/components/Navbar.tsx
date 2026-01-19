@@ -556,7 +556,7 @@ export function Navbar() {
                           { label: 'Abstract Art', to: '/new-art-gallery?category=Abstract Art', category: 'Abstract Art' },
                           { label: 'Bollywood Art', to: '/new-art-gallery?category=Bollywood Art', category: 'Bollywood Art' },
                           { label: 'Couple Art', to: '/new-art-gallery?category=Couple Art', category: 'Couple Art' },
-                          { label: 'Restaurant & Bar', to: '/new-art-gallery?category=Restaurant and Bar', category: 'Restaurant and Bar' },
+                          
                         ].map((item, idx) => (
                           <Link
                             key={item.label}
@@ -646,7 +646,7 @@ export function Navbar() {
                           { label: 'Wings', to: '/lighting?category=Wings', category: 'Wings' },
                           { label: 'Kids', to: '/lighting?category=Kids', category: 'Kids' },
                           // { label: 'Christmas', to: '/lighting?category=Christmas', category: 'Christmas' },
-                          { label: 'Restaurant & Bar', to: '/lighting?category=Restaurant and Bar', category: 'Restaurant and Bar' },
+                          
                         ].map((item, idx) => (
                           <Link
                             key={item.label}

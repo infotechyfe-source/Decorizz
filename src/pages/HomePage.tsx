@@ -365,7 +365,7 @@ export default function HomePage() {
           <CarouselNext className="hidden lg:flex" aria-label="Next slide" />
         </Carousel>
 
-       <div className="absolute inset-0 z-10 flex items-center justify-start">
+        <div className="absolute inset-0 z-10 flex items-center justify-start">
           <div className="p-4 sm:p-8 md:p-16 text-left max-w-2xl">
             {/* Animated Title with staggered lines */}
             <h1 className="font-extrabold leading-[1.1] text-[clamp(2rem,8vw,4rem)]">
@@ -1145,7 +1145,7 @@ export default function HomePage() {
 
         <div className="absolute right-8 top-12 hidden lg:flex flex-col gap-2" aria-hidden="true">
           <div className="w-10 h-10 border-2 rounded float-fast border-[#14b8a6]" />
-          <div className="w-10 h-10 border-2 rounded float-slow border-[#14b8a6]"/>
+          <div className="w-10 h-10 border-2 rounded float-slow border-[#14b8a6]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
@@ -1389,49 +1389,49 @@ export default function HomePage() {
             </div>
           </section>
         ) : faqs.length > 0 && (
-          <section className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20 relative overflow-hidden" aria-label="Explore Our Frame Collection" style={{
-            background: "linear-gradient(135deg, #f5f2e9 0%)",
-            backdropFilter: "blur(2px)",
-          }}>
+          <section
+            className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20 relative overflow-hidden bg-linear-to-br from-[#f5f2e9] to-[#f5f2e9] backdrop-blur-sm"
+            aria-label="Explore Our Frame Collection"
+          >
             <div className="max-w-7xl mx-auto px-4">
-              <h2 className="section-title-themed text-center mb-10">
+              {/* Section Title */}
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-center mb-12">
                 <span className="text-brand">Frequently</span>
                 <span className="text-accent"> Asked Questions</span>
               </h2>
-              <div className="faq-list" role="list">
+
+              {/* FAQ List */}
+              <ul className="faq-list space-y-4" role="list">
                 {faqs.slice(0, 5).map((f) => {
                   const isOpen = openFaq === f.id;
 
                   return (
-                    <details
-                      key={f.id}
-                      open={isOpen}
-                      className="faq-item faq-item-enhanced group"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpenFaq(isOpen ? null : f.id);
-                      }}
-                    >
-                      <summary className="faq-summary" aria-expanded={isOpen}>
-                        <span className="faq-icon faq-icon-animated">
-                          <span className={`plus ${isOpen ? "hidden" : "inline"}`}>+</span>
-                          <span className={`minus ${isOpen ? "inline" : "hidden"}`}>−</span>
+                    <li key={f.id} className="faq-item faq-item-enhanced border border-gray-200 rounded-lg overflow-hidden group">
+                      <button
+                        type="button"
+                        className="w-full flex justify-between items-center px-5 py-2 bg-white text-left focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 cursor-pointer"
+                        aria-expanded={isOpen}
+                        onClick={() => setOpenFaq(isOpen ? null : f.id)}
+                      >
+                        <span className="faq-question font-medium uppercase">{f.question}</span>
+                        <span className="faq-icon text-2xl font-bold transition-transform duration-300">
+                          {isOpen ? "-" : "+"}
                         </span>
-                        <span className="faq-question">{String(f.question).toUpperCase()}</span>
-                      </summary>
+                      </button>
 
+                      {/* Answer */}
                       {isOpen && (
-                        <div className="faq-answer">
+                        <div className="faq-answer px-5 py-4 bg-gray-50 text-gray-700 transition-all duration-300">
                           {f.answer}
                         </div>
                       )}
-                    </details>
+                    </li>
                   );
                 })}
-
-              </div>
+              </ul>
             </div>
           </section>
+
         )
       }
 

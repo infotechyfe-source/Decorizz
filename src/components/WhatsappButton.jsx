@@ -6,7 +6,7 @@ export function WhatsappButton({
   message = "Hi! I want to know more about your photo frames.",
   size = 56,
   bottom = 24,
-  right = 24,
+  right = 18,
 }) {
   const href = useMemo(
     () => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
@@ -19,7 +19,7 @@ export function WhatsappButton({
     right,
     width: size,
     height: size,
-    backgroundColor: "#14b8a6",
+    backgroundColor: "#25D366",
     color: "#fff",
     borderRadius: 9999,
     boxShadow:
@@ -41,8 +41,8 @@ export function WhatsappButton({
       aria-label="Chat on WhatsApp"
       title="Chat on WhatsApp"
       style={style}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#0d9488")}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#14b8a6")}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#128C7E")}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#25D366")}
       onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
       onMouseUp={(e) => (e.currentTarget.style.transform = "")}
     >
