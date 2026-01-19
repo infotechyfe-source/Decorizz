@@ -24,17 +24,13 @@ import BackImage from "../assets/back.jpg";
 import { FloatingProductVideo } from '../components/FloatingProductVideo';
 import logo from '../assets/logo-r.png';
 
-
-
 export default function ProductDetailPage() {
   const { id, category: categoryParam, name: nameParam } = useParams();
   const navigate = useNavigate();
   const { user, accessToken } = useContext(AuthContext);
-
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedFormat, setSelectedFormat] = useState<'Rolled' | 'Canvas' | 'Frame'>('Rolled');
@@ -50,6 +46,9 @@ export default function ProductDetailPage() {
   const [selectedArtStyle, setSelectedArtStyle] = useState<string>('Fantasy Painting');
 
   const isNeon = (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'neon';
+
+  const islighting = (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'lighting';
+
   const [neonOn, setNeonOn] = useState(true);
   const [neonText, setNeonText] = useState('Text');
   const [neonSize, setNeonSize] = useState<'12' | '18' | '24' | '30' | '36' | '48'>('24');
@@ -125,14 +124,12 @@ export default function ProductDetailPage() {
     return canvas.toDataURL('image/png');
   };
 
-
   const imageContainerRef = useRef(null);
   const thumbStripRef = useRef<HTMLDivElement | null>(null);
   const touchXRef = useRef<number | null>(null);
   const mainImageTouchRef = useRef<number | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-
 
   // Main image swipe handlers for mobile
   const handleMainImageTouchStart = (e: React.TouchEvent) => {
@@ -390,7 +387,6 @@ export default function ProductDetailPage() {
     setOrigin(`${xPct}% ${yPct}% `);
   };
 
-
   useEffect(() => {
     fetchProduct();
   }, [id, categoryParam, nameParam]);
@@ -410,7 +406,6 @@ export default function ProductDetailPage() {
     return () => window.removeEventListener("keyup", () => { });
   }, []);
 
-
   useEffect(() => {
     if (!product) return;
 
@@ -429,7 +424,6 @@ export default function ProductDetailPage() {
       }
     }
   }, [selectedFormat, selectedColor, product]);
-
 
   const fetchRelatedProducts = async (category: string, currentId?: string) => {
     try {
@@ -1279,7 +1273,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-
             {/* --- THUMBNAIL STRIP – RESPONSIVE CAROUSEL --- */}
             <div className="relative overflow-hidden px-2 sm:px-12">
               {/* Left Arrow - Hidden on mobile */}
@@ -1324,7 +1317,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-
               {/* Right Arrow - Hidden on mobile */}
               <button
                 onClick={() => handleArrow("right")}
@@ -1334,7 +1326,6 @@ export default function ProductDetailPage() {
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
-
 
             {/* Quick Specs to avoid empty space on left */}
             {!product.isCustomCanvas && (
@@ -1873,3 +1864,4 @@ export default function ProductDetailPage() {
     </div >
   );
 }
+ 

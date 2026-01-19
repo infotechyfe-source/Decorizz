@@ -322,7 +322,7 @@ export default function LightingPage() {
                     {/* Filters Sidebar */}
                     <div
                         className={`${showFilters ? 'block' : 'hidden'}
-    lg:block lg:w-64 lg:flex-shrink-0`}
+    lg:block lg:w-64 shrink-0`}
                     >
                         {/* Mobile Overlay */}
                         <div
