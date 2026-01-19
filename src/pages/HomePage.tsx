@@ -38,7 +38,6 @@ interface Testimonial {
   rating: number;
   profileImage?: string;
 }
-
 interface VideoItem {
   id: string;
   title: string;
@@ -249,9 +248,6 @@ export default function HomePage() {
   // Remove separate fetchFaqs useEffect – FAQs are now loaded in fetchAllData
 
   // fetchFaqs and its useEffect removed; FAQs are now fetched in fetchAllData.
-
-
-
   useEffect(() => {
     if (!bestApi) return;
 
@@ -332,7 +328,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="hero-section" aria-label="Hero Banner">
+      <section className="hero-section relative w-full overflow-hidden" aria-label="Hero Banner">
         {/* Floating Decorative Elements */}
         <div className="hero-floating-circle hero-floating-circle-1" aria-hidden="true" />
         <div className="hero-floating-circle hero-floating-circle-2" aria-hidden="true" />
@@ -369,100 +365,14 @@ export default function HomePage() {
           <CarouselNext className="hidden lg:flex" aria-label="Next slide" />
         </Carousel>
 
-        <div
-          className="hero-content"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-          }}
-        >
+       <div className="absolute inset-0 z-10 flex items-center justify-start">
           <div className="p-4 sm:p-8 md:p-16 text-left max-w-2xl">
             {/* Animated Title with staggered lines */}
-            <h1
-              style={{
-                fontSize: 'clamp(2rem, 8vw, 4rem)',
-                fontWeight: 800,
-                lineHeight: 1.15,
-              }}
-            >
-              <span
-                className="hero-text-line-1"
-                style={{
-                  display: 'block',
-                  color: '#3b2f27',
-                }}
-              >
-                Discover
-              </span>
-              <span
-                className="hero-text-line-2"
-                style={{
-                  display: 'block',
-                  fontSize: 'clamp(2.5rem, 10vw, 5rem)',
-                  color: '#14b8a6',
-                }}
-              >
-                300+
-              </span>
-              <span
-                className="hero-text-line-3"
-                style={{
-                  display: 'block',
-                  color: '#3b2f27',
-                }}
-              >
-                Modern Frames
-              </span>
+            <h1 className="font-extrabold leading-[1.1] text-[clamp(2rem,8vw,4rem)]">
+              <span className="block text-[#3b2f27] tracking-wide">Discover</span>
+              <span className="block text-[#14b8a6] leading-none text-[clamp(2.5rem,10vw,5rem)]">300+</span>
+              <span className="block text-[#3b2f27] tracking-tight">Modern Frames</span>
             </h1>
-
-            {/* Subtitle */}
-            <p
-              className="hero-text-line-3"
-              style={{
-                fontSize: 'clamp(0.9rem, 3vw, 1.25rem)',
-                fontWeight: 500,
-                marginTop: '1rem',
-                color: '#5c4a3d',
-                opacity: 0,
-              }}
-            >
-              {/* Premium Wall Frames & Canvas for Your Home */}
-            </p>
-
-            {/* CTA Buttons */}
-            {/* <div
-              className="flex flex-wrap gap-3 sm:gap-4 mt-6"
-              style={{
-                animation: 'lineSlideIn 0.6s ease-out 0.8s forwards',
-                opacity: 0,
-              }}
-            >
-              <Link
-                to="/shop"
-                className="hero-cta-btn px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
-                style={{
-                  backgroundColor: '#14b8a6',
-                  color: 'white',
-                }}
-              >
-                Shop Now
-              </Link>
-              <Link
-                to="/gallery"
-                className="hero-cta-btn px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm sm:text-base"
-                style={{
-                  backgroundColor: 'transparent',
-                  color: '#3b2f27',
-                  border: '2px solid #3b2f27',
-                }}
-              >
-                View Gallery
-              </Link>
-            </div> */}
           </div>
         </div>
       </section>
@@ -639,7 +549,7 @@ export default function HomePage() {
       </section>
 
       {/* Best Sellers Section */}
-      <section className="section-collections relative bg-[#faf7f4]" aria-label="Best Sellers">
+      <section className="section-collections relative" aria-label="Best Sellers" style={{ backgroundColor: '#faf7f4' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -740,7 +650,7 @@ export default function HomePage() {
 
       {/* Shop by Category Section */}
       {/* Premium Collection */}
-      <section className="section-collections relative bg-[#fef3c7]" aria-label="Premium Collection">
+      <section className="section-collections relative" aria-label="Premium Collection" style={{ backgroundColor: '#fef3c7' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -873,7 +783,7 @@ export default function HomePage() {
       </section>
 
       {/* New Arrivals */}
-      <section className="section-collections relative bg-[#e0f2fe]" aria-label="New Arrivals">
+      <section className="section-collections relative" aria-label="New Arrivals" style={{ backgroundColor: '#e0f2fe' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -894,7 +804,7 @@ export default function HomePage() {
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
               {
                 homeNewProducts.map((p: any) => (
-                  <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 240, scrollSnapAlign: 'start' }}>
+                  <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 240, scrollSnapAlign: 'start' }}>
                     <div className="w-full overflow-hidden bg-gray-100 rounded-t-2xl" style={{ height: 280 }}>
                       <ImageWithFallback src={optimizeImage(p.image, 800)} alt={p.name} className="w-full h-full object-cover" loading="eager" decoding="async" />
                     </div>
@@ -1126,7 +1036,7 @@ export default function HomePage() {
       </section>
 
       {/* Budget Finds */}
-      <section className="section-collections relative bg-[#f1f5f9]" aria-label="Budget Finds">
+      <section className="section-collections relative" aria-label="Budget Finds" style={{ backgroundColor: '#f1f5f9' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
           <div className="section-header text-center mb-6">
             <h2 className="section-title-themed font-extrabold mb-3 inline-block">
@@ -1149,7 +1059,7 @@ export default function HomePage() {
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
               {
                 budgetProducts.map((p: any) => (
-                  <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 240, scrollSnapAlign: 'start' }}>
+                  <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 240, scrollSnapAlign: 'start' }}>
                     <div className="w-full overflow-hidden bg-gray-100 rounded-t-2xl" style={{ height: 280 }}>
                       <ImageWithFallback src={optimizeImage(p.image, 800)} alt={p.name} className="w-full h-full object-cover" loading="eager" decoding="async" />
                     </div>
@@ -1235,7 +1145,7 @@ export default function HomePage() {
         <div className="deco-circle deco-circle-brown float-medium" style={{ width: '120px', height: '120px', bottom: '20%', right: '-40px' }} aria-hidden="true" />
 
         <div className="absolute right-8 top-12 hidden lg:flex flex-col gap-2" aria-hidden="true">
-          <div className="w-10 h-10 border-2 rounded float-fast" style={{ borderColor: "#14b8a6" }} />
+          <div className="w-10 h-10 border-2 rounded float-fast border-[#14b8a6]" />
           <div className="w-10 h-10 border-2 rounded float-slow" style={{ borderColor: "#14b8a6" }} />
         </div>
 
@@ -1478,17 +1388,12 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-
           </section>
         ) : faqs.length > 0 && (
-          <section
-            className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20
-             relative overflow-hidden
-             bg-[linear-gradient(135deg,_#f5f2e9_0%)]
-             backdrop-blur-sm"
-            aria-label="Explore Our Frame Collection"
-          >
-
+          <section className="best-section best-section-enhanced w-full mx-auto px-4 py-16 lg:py-20 relative overflow-hidden" aria-label="Explore Our Frame Collection" style={{
+            background: "linear-gradient(135deg, #f5f2e9 0%)",
+            backdropFilter: "blur(2px)",
+          }}>
             <div className="max-w-7xl mx-auto px-4">
               <h2 className="section-title-themed text-center mb-10">
                 <span className="text-brand">Frequently</span>
@@ -1508,16 +1413,13 @@ export default function HomePage() {
                         setOpenFaq(isOpen ? null : f.id);
                       }}
                     >
-                      <summary className="faq-summary">
+                      <summary className="faq-summary" aria-expanded={isOpen}>
                         <span className="faq-icon faq-icon-animated">
                           <span className={`plus ${isOpen ? "hidden" : "inline"}`}>+</span>
                           <span className={`minus ${isOpen ? "inline" : "hidden"}`}>−</span>
                         </span>
-                        <span className="faq-question">
-                          {String(f.question).toUpperCase()}
-                        </span>
+                        <span className="faq-question">{String(f.question).toUpperCase()}</span>
                       </summary>
-
 
                       {isOpen && (
                         <div className="faq-answer">

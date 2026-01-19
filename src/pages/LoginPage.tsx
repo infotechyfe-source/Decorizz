@@ -65,7 +65,7 @@ export default function LoginPage() {
           <form onSubmit={submit} className="space-y-6">
 
             {/* EMAIL */}
-            <div className="animate-fade-slide stagger-1" style={{ opacity: 0, animationFillMode: 'forwards' }}>
+            <div className="animate-fade-slide stagger-1 opacity-0" style={{ animationFillMode: 'forwards' }}>
               <label className="block text-gray-700 mb-2 font-medium">Email Address</label>
               <input
                 type="email"
@@ -114,8 +114,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full px-6 py-4 curved-xl glow-btn text-white font-semibold transition"
-                style={{ backgroundColor: '#14b8a6' }}
+                className="w-full px-6 py-4 curved-xl glow-btn text-white font-semibold transition bg-[#14b8a6]"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
