@@ -103,7 +103,7 @@ export function OfferPopup() {
                 {/* Close Button - rounded-full, bg-white/20 from index.css */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/20 text-white transition-all duration-200"
+                    className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/20 text-white transition-all duration-200 cursor-pointer"
                     style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'}
@@ -159,7 +159,7 @@ export function OfferPopup() {
                                 </p>
                             </div>
                             <div
-                                className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200"
+                                className="w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
                                 style={{
                                     backgroundColor: copied ? '#22c55e' : '#f3f4f6',
                                     color: copied ? '#ffffff' : '#6b7280'
@@ -171,7 +171,7 @@ export function OfferPopup() {
                     )}
 
                     {copied && (
-                        <p className="text-center text-sm text-white font-medium">
+                        <p className=" p-1 text-center text-sm text-white font-medium">
                             ✓ Copied to clipboard!
                         </p>
                     )}

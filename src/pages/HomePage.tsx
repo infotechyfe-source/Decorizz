@@ -648,7 +648,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Shop by Category Section */}
       {/* Premium Collection */}
       <section className="section-collections relative" aria-label="Premium Collection" style={{ backgroundColor: '#fef3c7' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
@@ -1146,7 +1145,7 @@ export default function HomePage() {
 
         <div className="absolute right-8 top-12 hidden lg:flex flex-col gap-2" aria-hidden="true">
           <div className="w-10 h-10 border-2 rounded float-fast border-[#14b8a6]" />
-          <div className="w-10 h-10 border-2 rounded float-slow" style={{ borderColor: "#14b8a6" }} />
+          <div className="w-10 h-10 border-2 rounded float-slow border-[#14b8a6]"/>
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
@@ -1242,7 +1241,7 @@ export default function HomePage() {
                   }}
                 >
                   <div
-                    className="icon-gradient-bg w-20 h-20 rounded-full flex items-center justify-center mb-3 md:absolute md:-top-6 md:left-1/2 md:-translate-x-1/2 md:mb-0"
+                    className="icon-gradient-bg w-20 h-20 rounded-full flex items-center justify-center mb-3 md:absolute  md:left-1/2 md:-translate-x-1/2 md:mb-0"
                   >
                     {(() => {
                       const Icon = (item as any).icon;
@@ -1251,7 +1250,7 @@ export default function HomePage() {
                   </div>
 
                   <h3
-                    className="text-xl font-bold mb-3"
+                    className="text-xl md:mt-24 font-bold mb-3"
                     style={{ fontFamily: "Georgia, serif", color: "#1f2937" }}
                   >
                     {item.title}
