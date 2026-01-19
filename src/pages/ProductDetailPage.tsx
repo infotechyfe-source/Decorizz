@@ -47,7 +47,7 @@ export default function ProductDetailPage() {
 
   const isNeon = (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'neon';
 
-  const islighting = (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'lighting';
+  const islighting = categoryParam === 'lighting' || (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'lighting';
 
   const [neonOn, setNeonOn] = useState(true);
   const [neonText, setNeonText] = useState('Text');
@@ -925,7 +925,7 @@ export default function ProductDetailPage() {
       'Kaushan Script': '"Kaushan Script", cursive',
       Sacramento: '"Sacramento", cursive',
     };
-    const swatches = ['#ffffff', '#fef3c7', '#fde047', '#fb923c', '#fdba74', '#f472b6', '#db2777', '#7c3aed', '#2563eb', '#22d3ee', '#22c55e'];
+    const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#b3f5ff', '#fff6e5'];
     const fontsMeta = [
       { label: 'Signature', family: '"Great Vibes", cursive' },
       { label: 'Barcelona', family: '"Pacifico", cursive' },
@@ -1274,6 +1274,8 @@ export default function ProductDetailPage() {
             </div>
 
             {/* --- THUMBNAIL STRIP – RESPONSIVE CAROUSEL --- */}
+            {!islighting && (
+
             <div className="relative overflow-hidden px-2 sm:px-12">
               {/* Left Arrow - Hidden on mobile */}
               <button
@@ -1326,6 +1328,7 @@ export default function ProductDetailPage() {
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
+            )}
 
             {/* Quick Specs to avoid empty space on left */}
             {!product.isCustomCanvas && (
@@ -1567,8 +1570,8 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Frame Options - Hide for Neon Signs, show appropriate options for Circle/Custom Canvas */}
-            {!product.categories?.some((cat: string) => cat.toLowerCase().includes('neon')) && (
+            {/* Frame Options - Hide for Neon Signs and Lighting products, show appropriate options for Circle/Custom Canvas */}
+            {!islighting && !product.categories?.some((cat: string) => cat.toLowerCase().includes('neon')) && (
               <div className="mb-6">
                 <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Frame</h3>
                 <div className="flex flex-wrap gap-3">
@@ -1612,6 +1615,33 @@ export default function ProductDetailPage() {
                         </button>
                       );
                     })}
+                </div>
+              </div>
+            )}
+
+            {/* Lighting Color Selector - Show only for Lighting products */}
+            {islighting && (
+              <div className="mb-6">
+                <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Select Your Colour</h3>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    '#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9b5cff', '#b3f5ff', '#fff6e5'
+                  ].map(color => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className="w-10 h-10 rounded-xl transition-all duration-200"
+                      style={{
+                        backgroundColor: color,
+                        outline: selectedColor === color ? '3px solid #14b8a6' : '1px solid #e5e7eb',
+                        outlineOffset: selectedColor === color ? '2px' : '0px',
+                        boxShadow: selectedColor === color ? '0 0 8px rgba(20, 184, 166, 0.4)' : 'none',
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-2 text-sm" style={{ color: '#6b7280' }}>
+                  Selected: <span style={{ color: selectedColor || '#14b8a6', fontWeight: 'bold', backgroundColor: '#1f2937', padding: '2px 8px', borderRadius: 4 }}>{selectedColor || '#ffffff'}</span>
                 </div>
               </div>
             )}
@@ -1689,7 +1719,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToWishlist}
                 className={`
-                        w-12 h-12 rounded-xl border-2 
+                        w-12 h-12 rounded-xl border-2
                         flex items-center justify-center
                         transition-all duration-200 cursor-pointer
                         ${isInWishlist
@@ -1797,7 +1827,7 @@ export default function ProductDetailPage() {
 
         </div>
 
-      
+     
         <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white/90 backdrop-blur border-t border-gray-200 p-3 z-40">
           <div className="flex items-center justify-between">
             <div>
@@ -1864,4 +1894,3 @@ export default function ProductDetailPage() {
     </div >
   );
 }
- 

@@ -347,7 +347,7 @@ export default function LightingPage() {
     max-lg:rounded-none
     shadow-2xl
     flex flex-col
-    z-50
+    z-20
     custom-scrollbar
 
     lg:bg-white/100
@@ -533,6 +533,7 @@ export default function LightingPage() {
                                                     eyeNavigates
                                                     hideCategory={false}
                                                     hideColors={true}
+                                                    categoryOverride="lighting"
                                                 />
                                             </div>
                                         ))}
@@ -575,7 +576,7 @@ export default function LightingPage() {
 
             <button
                 onClick={() => setShowFilters(true)}
-                className="fixed bottom-6 right-4 md:hidden rounded-full border w-12 h-12 flex items-center justify-center shadow-lg z-50"
+                className="fixed bottom-6 right-4 md:hidden rounded-full border w-12 h-12 flex items-center justify-center shadow-lg z-20"
                 style={{ borderColor: '#334155', backgroundColor: '#0f172a', color: '#e5e7eb' }}
             >
                 <span className="sr-only">Filters</span>

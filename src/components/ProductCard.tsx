@@ -30,6 +30,7 @@ type ProductCardProps = {
   aspectRatio?: string;
   imageHeight?: number;
   variant?: 'default' | 'mobileFooter';
+  categoryOverride?: string; // Override category in URL (e.g., "lighting" when on Lighting page)
 };
 
 function ProductCardComponent({
@@ -41,7 +42,10 @@ function ProductCardComponent({
   aspectRatio = "aspect-square",
   imageHeight,
   variant = 'default',
+  categoryOverride,
 }: ProductCardProps) {
+  // Use categoryOverride if provided, otherwise fall back to product.category or 'all'
+  const effectiveCategory = categoryOverride || product.category || 'all';
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [open, setOpen] = useState(false);
   const { user, accessToken } = useContext(AuthContext);
@@ -160,7 +164,7 @@ function ProductCardComponent({
       {/* Image (custom aspect) */}
       <div className={`relative w-full overflow-hidden bg-gray-100 group ${imageHeight ? '' : aspectRatio}`} style={imageHeight ? { height: imageHeight } : undefined}>
         <Link
-          to={`/product/${(product.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+          to={`/product/${effectiveCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           className="block w-full h-full relative"
         >
           {/* Main Image - Always Visible (behind) */}
@@ -186,7 +190,7 @@ function ProductCardComponent({
                 loading="lazy"
                 decoding="async"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="w-1/2 h-auto object-contain"
+                className="w-2/3 h-auto object-contain"
               />
             </div>
           )}
@@ -213,7 +217,7 @@ function ProductCardComponent({
       {variant === 'mobileFooter' ? (
         <div className="bg-black text-white px-3 py-2">
           <Link
-            to={`/product/${(product.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            to={`/product/${effectiveCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           >
             <h3 className="text-sm font-semibold mb-1">{product.name}</h3>
           </Link>
@@ -229,7 +233,7 @@ function ProductCardComponent({
           )}
 
           <Link
-            to={`/product/${(product.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            to={`/product/${effectiveCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           >
             <h3 className={`text-gray-900 mb-2 hover:text-teal-600 transition-colors ${hideCategory ? 'text-sm font-medium' : ''}`}>{truncatedName}</h3>
 
@@ -296,7 +300,7 @@ function ProductCardComponent({
 
                 <div className="flex items-center gap-3">
                   <Link
-                    to={`/product/${(product.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                    to={`/product/${effectiveCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
                     className="premium-btn-white"
                     onClick={() => setOpen(false)}
                   >
