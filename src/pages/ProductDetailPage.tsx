@@ -1232,7 +1232,11 @@ export default function ProductDetailPage() {
 
                   {/* Main Product Image */}
                   <ImageWithFallback
-                    src={mainImage}
+                    src={
+                      islighting && selectedColor
+                        ? product.neon_images_by_color?.[selectedColor] || product.image
+                        : mainImage
+                    }
                     srcSet={mainSrcSet}
                     alt={product.name}
                     loading="eager"
@@ -1242,6 +1246,7 @@ export default function ProductDetailPage() {
                     className="w-full h-full object-contain select-none"
                     onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
                   />
+
 
                   {/* Watermark Logo */}
                   <div
@@ -1276,58 +1281,58 @@ export default function ProductDetailPage() {
             {/* --- THUMBNAIL STRIP – RESPONSIVE CAROUSEL --- */}
             {!islighting && (
 
-            <div className="relative overflow-hidden px-2 sm:px-12">
-              {/* Left Arrow - Hidden on mobile */}
-              <button
-                onClick={() => handleArrow("left")}
-                className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
-                style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              <div
-                ref={thumbStripRef}
-                className="thumbs-strip pb-3 pt-3 sm:pb-4 sm:pt-4 overflow-hidden"
-                // wheel handled via native event listener
-                onKeyDown={handleThumbKeyDown}
-                onTouchStart={handleThumbTouchStart}
-                onTouchMove={handleThumbTouchMove}
-                onTouchEnd={handleThumbTouchEnd}
-              >
-                {/* Static thumbnails - centered, no sliding */}
-                <div
-                  className="thumb-slider flex gap-2 sm:gap-3 justify-center"
+              <div className="relative overflow-hidden px-2 sm:px-12">
+                {/* Left Arrow - Hidden on mobile */}
+                <button
+                  onClick={() => handleArrow("left")}
+                  className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
+                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
                 >
-                  {/* All thumbnails - responsive sizing */}
-                  {optimizedThumbItems.map((item, index) => (
-                    <div
-                      key={index}
-                      className={`thumb-item w-12 h-12 sm:w-20 sm:h-20 rounded-md sm:rounded-lg border-2 cursor-pointer overflow-hidden shrink-0 transition-all duration-300
-            ${item.selected ? "border-teal-600 shadow-lg scale-105 sm:scale-110 ring-2 ring-teal-600" : "border-gray-300 opacity-70 hover:opacity-100 active:opacity-100"}`}
-                      onClick={() => selectByIndex(index)}
-                      onContextMenu={(e) => e.preventDefault()}
-                    >
-                      <ImageWithFallback src={item.src} alt={item.alt} loading="lazy" className="w-full h-full object-cover" />
-                      {item.label && (
-                        <span className="hidden sm:block absolute bottom-1 left-1 text-[10px] px-2 py-0.5 rounded bg-black/60 text-white">
-                          {item.label}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
 
-              {/* Right Arrow - Hidden on mobile */}
-              <button
-                onClick={() => handleArrow("right")}
-                className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
-                style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+                <div
+                  ref={thumbStripRef}
+                  className="thumbs-strip pb-3 pt-3 sm:pb-4 sm:pt-4 overflow-hidden"
+                  // wheel handled via native event listener
+                  onKeyDown={handleThumbKeyDown}
+                  onTouchStart={handleThumbTouchStart}
+                  onTouchMove={handleThumbTouchMove}
+                  onTouchEnd={handleThumbTouchEnd}
+                >
+                  {/* Static thumbnails - centered, no sliding */}
+                  <div
+                    className="thumb-slider flex gap-2 sm:gap-3 justify-center"
+                  >
+                    {/* All thumbnails - responsive sizing */}
+                    {optimizedThumbItems.map((item, index) => (
+                      <div
+                        key={index}
+                        className={`thumb-item w-12 h-12 sm:w-20 sm:h-20 rounded-md sm:rounded-lg border-2 cursor-pointer overflow-hidden shrink-0 transition-all duration-300
+            ${item.selected ? "border-teal-600 shadow-lg scale-105 sm:scale-110 ring-2 ring-teal-600" : "border-gray-300 opacity-70 hover:opacity-100 active:opacity-100"}`}
+                        onClick={() => selectByIndex(index)}
+                        onContextMenu={(e) => e.preventDefault()}
+                      >
+                        <ImageWithFallback src={item.src} alt={item.alt} loading="lazy" className="w-full h-full object-cover" />
+                        {item.label && (
+                          <span className="hidden sm:block absolute bottom-1 left-1 text-[10px] px-2 py-0.5 rounded bg-black/60 text-white">
+                            {item.label}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Arrow - Hidden on mobile */}
+                <button
+                  onClick={() => handleArrow("right")}
+                  className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
+                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             )}
 
             {/* Quick Specs to avoid empty space on left */}
@@ -1470,10 +1475,7 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-
-            <h1 className="custom-heading">
-              <span>{product.name}</span>
-            </h1>
+            <h1 className="custom-heading"><span>{product.name}</span></h1>
 
             <div className="mt-4">
               <div className="flex flex-col gap-1">

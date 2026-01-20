@@ -46,6 +46,19 @@ export default function AdminProducts() {
     const [subsectionFilter, setSubsectionFilter] = useState('');
     const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
+    const NEON_COLORS = [
+        { name: "White", hex: "#ffffff" },
+        { name: "Pink", hex: "#FF2ec4" },
+        { name: "Green", hex: "#39ff14" },
+        { name: "Cyan", hex: "#00e5ff" },
+        { name: "Blue", hex: "#1e4bff" },
+        { name: "Yellow", hex: "#fff700" },
+        { name: "Orange", hex: "#ff9f00" },
+        { name: "Red", hex: "#ff1a1a" },
+        { name: "Purple", hex: "#9b5cff" },
+        { name: "Ice Blue", hex: "#b3f5ff" }
+    ];
+
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -198,7 +211,6 @@ export default function AdminProducts() {
 
         return uploadedUrls;
     };
-
 
     const uploadImage = async () => {
         if (!imageFile) return formData.image;
@@ -491,6 +503,20 @@ export default function AdminProducts() {
             setMigrationProgress("");
         }
     };
+    const handleNeonColorImage = async (hex: string, file?: File) => {
+  if (!file) return;
+
+  const url = await uploadToCloudinary(file, accessToken);
+
+  setFormData((prev) => ({
+    ...prev,
+    neonImagesByColor: {
+      ...(prev.neonImagesByColor || {}),
+      [hex]: url,
+    },
+  }));
+};
+
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
@@ -971,23 +997,27 @@ export default function AdminProducts() {
                                                     <option value="Rolled">Rolled</option>
                                                     <option value="Canvas">Canvas</option>
                                                     <option value="Frame">Frame</option>
+                                                    <option value="Neon">Neon</option>
                                                 </select>
                                             </div>
 
-                                            {/* Frame Color */}
-                                            <div>
-                                                <label className="block font-medium text-gray-700 mb-1">Frame Color</label>
-                                                <select
-                                                    className="w-full text-gray-700 px-4 py-2 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all form-input"
-                                                    value={formData.frameColor}
-                                                    onChange={(e) => setFormData({ ...formData, frameColor: e.target.value })}
-                                                    disabled={formData.format !== 'Frame'}
-                                                >
-                                                    <option value="White">White</option>
-                                                    <option value="Black">Black</option>
-                                                    <option value="Brown">Brown</option>
-                                                </select>
-                                            </div>
+                                            {formData.format === 'Frame' && (
+
+                                                <div>
+                                                    <label className="block font-medium text-gray-700 mb-1">Frame Color</label>
+                                                    <select
+                                                        className="w-full text-gray-700 px-4 py-2 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all form-input"
+                                                        value={formData.frameColor}
+                                                        onChange={(e) => setFormData({ ...formData, frameColor: e.target.value })}
+
+                                                    >
+                                                        <option value="White">White</option>
+                                                        <option value="Black">Black</option>
+                                                        <option value="Brown">Brown</option>
+                                                    </select>
+                                                </div>
+                                            )}
+
                                         </div>
                                     </div>
 
@@ -1124,6 +1154,66 @@ export default function AdminProducts() {
                                         )}
                                     </div>
                                 </div>
+                                {formData.format === "Neon" && (
+                                    <div className="border-t pt-6 mt-6">
+                                        <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+                                            <span className="w-1 h-6 bg-gradient-to-b from-pink-500 to-purple-600 rounded"></span>
+                                            Neon Images by Color
+                                        </h3>
+                                        <p className="text-sm text-gray-500 mb-4">
+                                            Upload neon images for each lighting color
+                                        </p>
+
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                            {NEON_COLORS.map(({ name, hex }) => (
+                                                <div key={hex} className="border rounded-lg p-3">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span
+                                                            className="w-4 h-4 rounded-full border"
+                                                            style={{ backgroundColor: hex }}
+                                                        />
+                                                        <p className="text-sm font-semibold text-gray-700">{name}</p>
+                                                    </div>
+
+                                                    {formData.neonImagesByColor?.[hex] ? (
+                                                        <div className="relative">
+                                                            <img
+                                                                src={formData.neonImagesByColor[hex]}
+                                                                className="w-full h-32 object-cover rounded"
+                                                            />
+                                                            <label className="mt-2 inline-block px-3 py-1 rounded border text-sm cursor-pointer">
+                                                                Replace
+                                                                <input
+                                                                    type="file"
+                                                                    className="hidden"
+                                                                    accept="image/*"
+                                                                    onChange={(e) =>
+                                                                        handleNeonColorImage(hex, e.target.files?.[0])
+                                                                    }
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                    ) : (
+                                                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                                            <span className="text-xs text-gray-500">
+                                                                Upload {name} image
+                                                            </span>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) =>
+                                                                    handleNeonColorImage(hex, e.target.files?.[0])
+                                                                }
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
 
                                 {/* COLORS */}
                                 <div className="border-t pt-6">
@@ -1250,7 +1340,6 @@ export default function AdminProducts() {
                                     )}
                                 </div>
 
-
                                 {/* SIZES */}
                                 <div className="border-t pt-6 mt-6">
                                     <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
@@ -1320,7 +1409,6 @@ export default function AdminProducts() {
                     </div>
                 </div>
             )}
-
 
             {/* View Product Modal */}
             {viewingProduct && (
@@ -1493,8 +1581,6 @@ export default function AdminProducts() {
                     </div>
                 </div>
             )}
-
-
             {/* Custom Scrollbar Styles */}
             <style>{`
         /* Webkit browsers (Chrome, Safari, Edge) */
