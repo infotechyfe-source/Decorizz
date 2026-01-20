@@ -905,6 +905,21 @@ export default function ProductDetailPage() {
       ? neonImageMap[selectedColor.toLowerCase()]
       : product?.image || "";
 
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    if (!activeImage) return;
+
+    setFade(true); // start fade out
+
+    const timeout = setTimeout(() => {
+      setFade(false); // fade in
+    }, 200); // 200ms fade duration
+
+    return () => clearTimeout(timeout);
+  }, [activeImage]);
+
+
 
   // Loading is handled by RouteLoader - no need for individual page spinner
 
@@ -1271,8 +1286,6 @@ export default function ProductDetailPage() {
                     onContextMenu={(e) => e.preventDefault()}
                   />
 
-
-
                   {/* Watermark Logo */}
                   <div
                     style={{
@@ -1543,33 +1556,35 @@ export default function ProductDetailPage() {
             {/* Format (Rolled / Canvas / Frame) + Layout */}
             <div className="mb-4 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6">
 
-              {/* Material (Format) - Hide for Neon Signs */}
-              {!product.categories?.some((cat: string) => cat.toLowerCase().includes('neon')) && (
-                <div>
+              {/* Material (Format) */}
+<div>
+  <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
+  <div className="flex flex-wrap gap-3 rounded-lg ">
+    {(islighting ? ['Neon Light'] : ['Canvas'] as const).map((fmt) => {
+      const available = !islighting
+        ? computePriceFor(selectedSize, fmt, product.subsection) !== undefined
+        : true; // Neon Light is always available for lighting products
+      return (
+        <button
+          key={fmt}
+          onClick={() => available && setSelectedFormat(fmt)}
+          className={`px-4 py-1 rounded-lg border-2 transition ${
+            selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer' : ''
+          } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
+          style={{
+            borderColor: selectedFormat === fmt ? undefined : '#d1d5db',
+            color: selectedFormat === fmt ? undefined : '#374151',
+          }}
+          title={available ? '' : 'Not available for this size'}
+          disabled={!available}
+        >
+          {fmt}
+        </button>
+      );
+    })}
+  </div>
+</div>
 
-                  <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
-                  <div className="flex flex-wrap gap-3 rounded-lg ">
-                    {(['Canvas'] as const)
-                      .map((fmt) => {
-                        const available = computePriceFor(selectedSize, fmt, product.subsection) !== undefined;
-                        return (
-                          <button
-                            key={fmt}
-                            onClick={() => available && setSelectedFormat(fmt)}
-                            className={`px-4 py-1 rounded-lg border-2 transition ${selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer'
-                              : ''
-                              } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
-                            style={{ borderColor: selectedFormat === fmt ? undefined : '#d1d5db', color: selectedFormat === fmt ? undefined : '#374151' }}
-                            title={available ? '' : 'Not available for this size'}
-                            disabled={!available}
-                          >
-                            {fmt}
-                          </button>
-                        );
-                      })}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Sizes */}
@@ -1645,7 +1660,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Lighting Color Selector - Rounded LG */}
             {islighting && (
               <div className="mb-4">
@@ -1665,7 +1680,7 @@ export default function ProductDetailPage() {
                     { name: 'Red', hex: '#ff1a1a' },
                     { name: 'Purple', hex: '#9b5cff' },
                     { name: 'Ice', hex: '#b3f5ff' },
-                 
+
                   ].map(({ name, hex }) => {
                     const selected = selectedColor === hex.toLowerCase().trim();
 
