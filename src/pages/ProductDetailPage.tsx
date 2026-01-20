@@ -60,7 +60,7 @@ export default function ProductDetailPage() {
   const [neonBackboardOpen, setNeonBackboardOpen] = useState(false);
   const NEON_PRICE: Record<'12' | '18' | '24' | '30' | '36' | '48', number> = { '12': 1999, '18': 2565, '24': 3499, '30': 4499, '36': 5599, '48': 7999 };
   const neonPrice = NEON_PRICE[neonSize];
-
+  const [pop, setPop] = useState(false);
   const FONTS_META: { label: string; family: string; uppercase?: boolean; letterSpacing?: string; outline?: boolean }[] = [
     { label: 'Signature', family: '"Great Vibes", cursive' },
     { label: 'Barcelona', family: '"Pacifico", cursive' },
@@ -269,7 +269,6 @@ export default function ProductDetailPage() {
         });
       });
     }
-
 
     let layoutImage = VerticalImg; // Default to vertical image
     if (product.layout) {
@@ -905,21 +904,6 @@ export default function ProductDetailPage() {
       ? neonImageMap[selectedColor.toLowerCase()]
       : product?.image || "";
 
-  const [fade, setFade] = useState(false);
-
-  useEffect(() => {
-    if (!activeImage) return;
-
-    setFade(true); // start fade out
-
-    const timeout = setTimeout(() => {
-      setFade(false); // fade in
-    }, 200); // 200ms fade duration
-
-    return () => clearTimeout(timeout);
-  }, [activeImage]);
-
-
 
   // Loading is handled by RouteLoader - no need for individual page spinner
 
@@ -961,7 +945,7 @@ export default function ProductDetailPage() {
       'Kaushan Script': '"Kaushan Script", cursive',
       Sacramento: '"Sacramento", cursive',
     };
-    const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#b3f5ff'];
+    const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#faf9f6'];
     const fontsMeta = [
       { label: 'Signature', family: '"Great Vibes", cursive' },
       { label: 'Barcelona', family: '"Pacifico", cursive' },
@@ -1205,8 +1189,8 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen content-offset" 
-    style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #fdf9efff 100%)' }}>
+    <div className="min-h-screen content-offset"
+      style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #fdf9efff 100%)' }}>
       <Navbar />
 
       {/* Decorative Squares (top) */}
@@ -1237,8 +1221,9 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-h-none lg:max-h-[90vh]">
 
           {/* Image Box */}
-          <div className="soft-card rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', color: '#4b5563' }}>
+          <div className="soft-card rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', color: '#4b5563'}}>
 
+            
             <div
               ref={imageContainerRef}
               className="rounded-lg overflow-hidden"
@@ -1679,7 +1664,7 @@ export default function ProductDetailPage() {
                     { name: 'Orange', hex: '#ff9f00' },
                     { name: 'Red', hex: '#ff1a1a' },
                     { name: 'Purple', hex: '#9b5cff' },
-                    { name: 'Ice', hex: '#b3f5ff' },
+                    { name: 'Ice', hex: '#e9f7ff'},
 
                   ].map(({ name, hex }) => {
                     const selected = selectedColor === hex.toLowerCase().trim();

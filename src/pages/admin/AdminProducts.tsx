@@ -56,7 +56,7 @@ export default function AdminProducts() {
         { name: "Orange", hex: "#ff9f00" },
         { name: "Red", hex: "#ff1a1a" },
         { name: "Purple", hex: "#9b5cff" },
-        { name: "Ice Blue", hex: "#b3f5ff" }
+        { name: "Ice Blue", hex: "#faf9f6" }
     ];
 
     const [formData, setFormData] = useState({
