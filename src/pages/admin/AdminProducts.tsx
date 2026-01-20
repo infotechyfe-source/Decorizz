@@ -77,6 +77,7 @@ export default function AdminProducts() {
         format: "Rolled",
         frameColor: "Black",
         imagesByColor: { White: "", Black: "", Brown: "" },
+        neonImagesByColor: {} as Record<string, string>,
     });
 
     const handleExtraImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +182,6 @@ export default function AdminProducts() {
         }
     };
 
-
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -252,6 +252,7 @@ export default function AdminProducts() {
                 format: product.format || "Rolled",
                 frameColor: product.frameColor || "Black",
                 imagesByColor: (product as any).imagesByColor || { White: "", Black: "", Brown: "" },
+                neonImagesByColor: product.neon_images_by_color || {},
             });
 
             // Load existing extra images for preview when editing
@@ -340,6 +341,7 @@ export default function AdminProducts() {
             image: imageUrl,
             imagesByColor: byColor,
             extraImages: finalExtraImages,
+            neon_images_by_color: formData.neonImagesByColor,
         };
 
         try {
@@ -503,20 +505,21 @@ export default function AdminProducts() {
             setMigrationProgress("");
         }
     };
-    const handleNeonColorImage = async (hex: string, file?: File) => {
-  if (!file) return;
 
-  const url = await uploadToCloudinary(file, accessToken);
+   const handleNeonColorImage = async (hex: string, file?: File) => {
+    if (!file) return;
 
-  setFormData((prev) => ({
-    ...prev,
-    neonImagesByColor: {
-      ...(prev.neonImagesByColor || {}),
-      [hex]: url,
-    },
-  }));
+    const url = await uploadToCloudinary(file, accessToken);
+    console.log("Uploaded Cloudinary URL:", url); // 🔥 check this in console
+
+    setFormData((prev) => ({
+        ...prev,
+        neonImagesByColor: {
+            ...(prev.neonImagesByColor || {}),
+            [hex]: url,
+        },
+    }));
 };
-
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
@@ -1002,7 +1005,6 @@ export default function AdminProducts() {
                                             </div>
 
                                             {formData.format === 'Frame' && (
-
                                                 <div>
                                                     <label className="block font-medium text-gray-700 mb-1">Frame Color</label>
                                                     <select
@@ -1176,12 +1178,13 @@ export default function AdminProducts() {
                                                     </div>
 
                                                     {formData.neonImagesByColor?.[hex] ? (
+
                                                         <div className="relative">
                                                             <img
                                                                 src={formData.neonImagesByColor[hex]}
                                                                 className="w-full h-32 object-cover rounded"
                                                             />
-                                                            <label className="mt-2 inline-block px-3 py-1 rounded border text-sm cursor-pointer">
+                                                            <label className="mt-2 inline-block px-3 py-1 rounded border text-sm cursor-pointer text-gray-700">
                                                                 Replace
                                                                 <input
                                                                     type="file"
@@ -1213,7 +1216,6 @@ export default function AdminProducts() {
                                         </div>
                                     </div>
                                 )}
-
 
                                 {/* COLORS */}
                                 <div className="border-t pt-6">

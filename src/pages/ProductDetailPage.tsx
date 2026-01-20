@@ -1621,29 +1621,56 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Lighting Color Selector - Show only for Lighting products */}
+
+            {/* Lighting Color Selector - Rounded LG */}
             {islighting && (
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Select Your Colour</h3>
-                <div className="flex flex-wrap gap-2">
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold mb-2 text-gray-800">
+                  Select Light Colour
+                </h3>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 ">
                   {[
-                    '#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9b5cff', '#b3f5ff', '#fff6e5'
-                  ].map(color => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className="w-10 h-10 rounded-xl transition-all duration-200"
-                      style={{
-                        backgroundColor: color,
-                        outline: selectedColor === color ? '3px solid #14b8a6' : '1px solid #e5e7eb',
-                        outlineOffset: selectedColor === color ? '2px' : '0px',
-                        boxShadow: selectedColor === color ? '0 0 8px rgba(20, 184, 166, 0.4)' : 'none',
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="mt-2 text-sm" style={{ color: '#6b7280' }}>
-                  Selected: <span style={{ color: selectedColor || '#14b8a6', fontWeight: 'bold', backgroundColor: '#1f2937', padding: '2px 8px', borderRadius: 4 }}>{selectedColor || '#ffffff'}</span>
+                    { name: 'White', hex: '#ffffff' },
+                    { name: 'Pink', hex: '#FF2ec4' },
+                    { name: 'Green', hex: '#39ff14' },
+                    { name: 'Cyan', hex: '#00e5ff' },
+                    { name: 'Blue', hex: '#1e4bff' },
+                    { name: 'Yellow', hex: '#fff700' },
+                    { name: 'Orange', hex: '#ff9f00' },
+                    { name: 'Red', hex: '#ff1a1a' },
+                    { name: 'Purple', hex: '#9b5cff' },
+                    { name: 'Ice', hex: '#b3f5ff' },
+                    { name: 'Warm', hex: '#fff6e5' },
+                  ].map(({ name, hex }) => {
+                    const selected = selectedColor === hex;
+
+                    return (
+                      <button
+                        key={hex}
+                        onClick={() => setSelectedColor(hex)}
+                        title={name}
+                        className={`
+              relative cursor-pointer w-10 h-10  rounded-lg shrink-0 transition-all duration-200 
+              ${selected
+                            ? 'border-2 border-teal-500 scale-105'
+                            : 'border border-gray-300 hover:scale-105'}
+            `}
+                        style={{
+                          backgroundColor: hex,
+                          boxShadow: selected
+                            ? `0 0 10px ${hex}, 0 0 16px rgba(20,184,166,0.35)`
+                            : 'none',
+                        }}
+                      >
+                        {selected && (
+                          <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-black">
+                            ✓
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
