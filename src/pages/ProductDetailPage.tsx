@@ -946,7 +946,7 @@ export default function ProductDetailPage() {
       'Kaushan Script': '"Kaushan Script", cursive',
       Sacramento: '"Sacramento", cursive',
     };
-    const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#b3f5ff', '#fff6e5'];
+    const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#b3f5ff'];
     const fontsMeta = [
       { label: 'Signature', family: '"Great Vibes", cursive' },
       { label: 'Barcelona', family: '"Pacifico", cursive' },
@@ -1645,8 +1645,7 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
-
-
+            
             {/* Lighting Color Selector - Rounded LG */}
             {islighting && (
               <div className="mb-4">
@@ -1666,7 +1665,7 @@ export default function ProductDetailPage() {
                     { name: 'Red', hex: '#ff1a1a' },
                     { name: 'Purple', hex: '#9b5cff' },
                     { name: 'Ice', hex: '#b3f5ff' },
-                    { name: 'Warm', hex: '#fff6e5' },
+                 
                   ].map(({ name, hex }) => {
                     const selected = selectedColor === hex.toLowerCase().trim();
 
