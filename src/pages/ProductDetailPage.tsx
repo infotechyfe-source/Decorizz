@@ -252,7 +252,7 @@ export default function ProductDetailPage() {
             onClick: () => {
               setSelectedFormat('Frame');
               setSelectedImage(url);
-              setSelectedColor(color);
+              setSelectedColor(color.toLowerCase());
             },
             selected: selectedImage === url,
           });
@@ -885,6 +885,27 @@ export default function ProductDetailPage() {
     return computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price;
   }, [selectedSize, selectedFormat, product]);
 
+  const neonImageMap = useMemo(() => {
+    const map: Record<string, string> = {};
+
+    if (!product || !product.neon_images_by_color) return map;
+
+    Object.entries(product.neon_images_by_color).forEach(([hex, url]) => {
+      map[hex.toLowerCase().trim()] = url as string;
+    });
+
+    return map;
+  }, [product]);
+
+
+  const activeImage =
+    islighting &&
+      selectedColor &&
+      neonImageMap[selectedColor?.toLowerCase()]
+      ? neonImageMap[selectedColor.toLowerCase()]
+      : product?.image || "";
+
+
   // Loading is handled by RouteLoader - no need for individual page spinner
 
   if (!product && !isNeon) {
@@ -971,6 +992,7 @@ export default function ProductDetailPage() {
           return { ...base, borderStyle: 'dashed', borderRadius: 6 };
       }
     })();
+
     return (
       <div className="min-h-screen content-offset" style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #fdf9efff 100%)' }}>
         <Navbar />
@@ -1232,20 +1254,23 @@ export default function ProductDetailPage() {
 
                   {/* Main Product Image */}
                   <ImageWithFallback
-                    src={
-                      islighting && selectedColor
-                        ? product.neon_images_by_color?.[selectedColor] || product.image
-                        : mainImage
+                    src={optimizeImage(activeImage, 800)}
+                    srcSet={
+                      activeImage
+                        ? `${optimizeImage(activeImage, 400)} 400w,
+         ${optimizeImage(activeImage, 800)} 800w,
+         ${optimizeImage(activeImage, 1200)} 1200w`
+                        : undefined
                     }
-                    srcSet={mainSrcSet}
-                    alt={product.name}
+                    alt={product?.name || "Product image"}
                     loading="eager"
                     fetchPriority="high"
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     decoding="async"
                     className="w-full h-full object-contain select-none"
-                    onContextMenu={(e: React.MouseEvent) => e.preventDefault()}
+                    onContextMenu={(e) => e.preventDefault()}
                   />
+
 
 
                   {/* Watermark Logo */}
@@ -1643,12 +1668,12 @@ export default function ProductDetailPage() {
                     { name: 'Ice', hex: '#b3f5ff' },
                     { name: 'Warm', hex: '#fff6e5' },
                   ].map(({ name, hex }) => {
-                    const selected = selectedColor === hex;
+                    const selected = selectedColor === hex.toLowerCase().trim();
 
                     return (
                       <button
                         key={hex}
-                        onClick={() => setSelectedColor(hex)}
+                        onClick={() => setSelectedColor(hex.toLowerCase().trim())}
                         title={name}
                         className={`
               relative cursor-pointer w-10 h-10  rounded-lg shrink-0 transition-all duration-200 
