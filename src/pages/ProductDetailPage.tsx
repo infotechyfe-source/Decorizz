@@ -1205,7 +1205,8 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen content-offset" style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #fdf9efff 100%)' }}>
+    <div className="min-h-screen content-offset" 
+    style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #fdf9efff 100%)' }}>
       <Navbar />
 
       {/* Decorative Squares (top) */}
@@ -1557,33 +1558,32 @@ export default function ProductDetailPage() {
             <div className="mb-4 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6">
 
               {/* Material (Format) */}
-<div>
-  <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
-  <div className="flex flex-wrap gap-3 rounded-lg ">
-    {(islighting ? ['Neon Light'] : ['Canvas'] as const).map((fmt) => {
-      const available = !islighting
-        ? computePriceFor(selectedSize, fmt, product.subsection) !== undefined
-        : true; // Neon Light is always available for lighting products
-      return (
-        <button
-          key={fmt}
-          onClick={() => available && setSelectedFormat(fmt)}
-          className={`px-4 py-1 rounded-lg border-2 transition ${
-            selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer' : ''
-          } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
-          style={{
-            borderColor: selectedFormat === fmt ? undefined : '#d1d5db',
-            color: selectedFormat === fmt ? undefined : '#374151',
-          }}
-          title={available ? '' : 'Not available for this size'}
-          disabled={!available}
-        >
-          {fmt}
-        </button>
-      );
-    })}
-  </div>
-</div>
+              <div>
+                <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
+                <div className="flex flex-wrap gap-3 rounded-lg ">
+                  {(islighting ? ['Neon Light'] : ['Canvas'] as const).map((fmt) => {
+                    const available = !islighting
+                      ? computePriceFor(selectedSize, fmt, product.subsection) !== undefined
+                      : true; // Neon Light is always available for lighting products
+                    return (
+                      <button
+                        key={fmt}
+                        onClick={() => available && setSelectedFormat(fmt)}
+                        className={`px-4 py-1 rounded-lg border-2 transition ${selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer' : ''
+                          } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
+                        style={{
+                          borderColor: selectedFormat === fmt ? undefined : '#d1d5db',
+                          color: selectedFormat === fmt ? undefined : '#374151',
+                        }}
+                        title={available ? '' : 'Not available for this size'}
+                        disabled={!available}
+                      >
+                        {fmt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
             </div>
 
@@ -1957,7 +1957,6 @@ export default function ProductDetailPage() {
       {(product?.id || id) && (
         <FloatingProductVideo productId={product?.id || id || ''} />
       )}
-
       <Footer />
     </div >
   );
