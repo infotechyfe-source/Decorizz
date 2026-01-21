@@ -1038,6 +1038,8 @@ export default function AdminProducts() {
                                             <option value="Metal">Metal</option>
                                             <option value="Plastic">Plastic</option>
                                             <option value="Glass">Glass</option>
+                                            <option value="Acrylic">Acrylic</option>
+                                            <option value="Neon">Neon</option>
                                         </select>
                                     </div>
 
