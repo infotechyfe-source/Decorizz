@@ -48,7 +48,7 @@ export default function AdminProducts() {
 
     const NEON_COLORS = [
         { name: "White", hex: "#ffffff" },
-        { name: "Pink", hex: "#FF2ec4" },
+        { name: "Pink", hex: "#ff2ec4" },
         { name: "Green", hex: "#39ff14" },
         { name: "Cyan", hex: "#00e5ff" },
         { name: "Blue", hex: "#1e4bff" },
@@ -56,8 +56,9 @@ export default function AdminProducts() {
         { name: "Orange", hex: "#ff9f00" },
         { name: "Red", hex: "#ff1a1a" },
         { name: "Purple", hex: "#9b5cff" },
-        { name: "Ice Blue", hex: "#faf9f6" }
+        { name: "Ice", hex: "#e9f7ff" }
     ];
+
 
     const [formData, setFormData] = useState({
         name: "",
@@ -506,20 +507,20 @@ export default function AdminProducts() {
         }
     };
 
-   const handleNeonColorImage = async (hex: string, file?: File) => {
-    if (!file) return;
+    const handleNeonColorImage = async (hex: string, file?: File) => {
+        if (!file) return;
+         const normalizedHex = hex.toLowerCase().trim();
+        const url = await uploadToCloudinary(file, accessToken);
+        console.log("Uploaded Cloudinary URL:", url); 
 
-    const url = await uploadToCloudinary(file, accessToken);
-    console.log("Uploaded Cloudinary URL:", url); // 🔥 check this in console
-
-    setFormData((prev) => ({
-        ...prev,
-        neonImagesByColor: {
-            ...(prev.neonImagesByColor || {}),
-            [hex]: url,
-        },
-    }));
-};
+        setFormData((prev) => ({
+            ...prev,
+            neonImagesByColor: {
+                ...(prev.neonImagesByColor || {}),
+                 [normalizedHex]: url,
+            },
+        }));
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 flex">
