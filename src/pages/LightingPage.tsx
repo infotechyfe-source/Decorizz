@@ -333,10 +333,7 @@ export default function LightingPage() {
                         {/* Filter Panel */}
                         <div
                             className="
-    lg:sticky
-    lg:top-32
-    lg:h-[calc(100vh-8rem)]
-    lg:overflow-y-auto
+   
 
     max-lg:fixed
     max-lg:inset-0

@@ -553,7 +553,16 @@ export default function ShopPage() {
 
             {/* Filter Panel */}
             <div
-              className="lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto max-lg:relative max-lg:w-full max-lg:h-auto max-lg:overflow-visible rounded-3xl shadow-2xl flex flex-col bg-white backdrop-blur-md border border-gray-200 custom-scrollbar ">
+              className="max-lg:relative
+    max-lg:w-full
+    rounded-3xl
+    shadow-2xl
+    flex
+    flex-col
+    bg-white
+    backdrop-blur-md
+    border
+    border-gray-200 ">
 
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -579,7 +588,7 @@ export default function ShopPage() {
               </div>
 
               {/* Scrollable Content */}
-              <div className="overflow-y-auto flex-1 p-6 custom-scrollbar">
+              <div className=" flex-1 p-6">
 
                 {/* Decor by Space Filter */}
                 <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>

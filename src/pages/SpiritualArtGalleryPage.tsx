@@ -354,7 +354,7 @@ export default function SpiritualArtGalleryPage() {
 
                         {/* Filter Panel */}
                         <div
-                            className="lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto max-lg:fixed max-lg:inset-0 max-lg:overflow-y-auto max-lg:top-0 lg:rounded-3xl max-lg:rounded-none shadow-2xl flex flex-col z-50 custom-scrollbar lg:bg-white/100 lg:backdrop-blur-md max-lg:bg-white max-lg:w-full max-lg:h-full"
+                            className=" max-lg:fixed max-lg:inset-0 max-lg:overflow-y-auto max-lg:top-0 lg:rounded-3xl max-lg:rounded-none shadow-2xl flex flex-col z-20 custom-scrollbar lg:bg-white/100 lg:backdrop-blur-md max-lg:bg-white max-lg:w-full max-lg:h-full"
                             style={{ border: '1px solid #e5e7eb' }}
                         >
                             {/* Header */}

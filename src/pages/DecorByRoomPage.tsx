@@ -526,10 +526,7 @@ export default function DecorByRoomPage() {
             {/* Filter Panel */}
             <div
               className="
-    lg:sticky
-    lg:top-32
-    lg:h-[calc(100vh-8rem)]
-    lg:overflow-y-auto
+    
 
     max-lg:fixed
     max-lg:inset-0
@@ -540,7 +537,7 @@ export default function DecorByRoomPage() {
     max-lg:rounded-none
     shadow-2xl
     flex flex-col
-    z-50
+    z-20
     custom-scrollbar
 
     lg:bg-white/100
@@ -553,7 +550,6 @@ export default function DecorByRoomPage() {
                 border: '1px solid #e5e7eb',
               }}
             >
-
 
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: '#e5e7eb' }}>
@@ -620,6 +616,29 @@ export default function DecorByRoomPage() {
                     </div>
                   )}
                 </div>
+                  {/* Price Range */}
+                                <div className="mb-6">
+                                    <h3 className="mb-3" style={{ fontWeight: 700, color: '#1f2937' }}>
+                                        Price Range
+                                    </h3>
+                                    <div className="space-y-2">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="10000"
+                                            value={filters.priceMax}
+                                            onChange={(e) =>
+                                                setFilters(prev => ({ ...prev, priceMax: Number(e.target.value) }))
+                                            }
+                                            className="w-full"
+                                            style={{ accentColor: '#14b8a6' }}
+                                        />
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span style={{ color: '#6b7280' }}>₹{filters.priceMin}</span>
+                                            <span style={{ color: '#6b7280' }}>₹{filters.priceMax}</span>
+                                        </div>
+                                    </div>
+                                </div>
 
                 {activeFilterCount > 0 && (
                   <button
