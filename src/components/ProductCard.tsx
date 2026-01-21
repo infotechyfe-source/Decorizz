@@ -238,8 +238,6 @@ function ProductCardComponent({
             <h3 className={`text-gray-900 mb-2 hover:text-teal-600 transition-colors ${hideCategory ? 'text-sm font-medium' : ''}`}>{truncatedName}</h3>
 
           </Link>
-
-
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <span className="text-gray-400 text-sm" style={{ textDecoration: 'line-through' }}>

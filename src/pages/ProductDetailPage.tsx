@@ -896,6 +896,22 @@ export default function ProductDetailPage() {
     return map;
   }, [product]);
 
+  // Update image when color changes for lighting products
+  useEffect(() => {
+    if (!islighting || !selectedColor || !product?.neon_images_by_color) return;
+
+    // Normalize keys for lookup
+    const normalizedMap: Record<string, string> = {};
+    Object.entries(product.neon_images_by_color).forEach(([k, v]) => {
+      normalizedMap[k.toLowerCase().trim()] = v as string;
+    });
+
+    const neonImg = normalizedMap[selectedColor.toLowerCase().trim()];
+    if (neonImg) {
+      setSelectedImage(neonImg);
+    }
+  }, [selectedColor, islighting, product]);
+
 
   const activeImage = selectedImage || (
     islighting &&
@@ -1709,6 +1725,7 @@ export default function ProductDetailPage() {
 
                     return (
                       <button
+                        type="button"
                         key={hex}
                         onClick={() => setSelectedColor(hex.toLowerCase().trim())}
                         title={name}
