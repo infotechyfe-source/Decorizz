@@ -253,7 +253,7 @@ export function ChatBot() {
         <>
             {/* Greeting Bubble */}
             <div
-                className={`fixed left-6 bottom-24 z-0 max-w-62.5 bg-white p-4 rounded-xl shadow-xl transition-all duration-500 transform origin-bottom-left border border-gray-100 ${showGreeting && !isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}`}
+                className={`fixed left-6 bottom-24 z-40 max-w-62.5 bg-white p-4 rounded-xl shadow-xl transition-all duration-500 transform origin-bottom-left border border-gray-100 ${showGreeting && !isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}`}
             >
                 <button
                     aria-label='close'

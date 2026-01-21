@@ -28,6 +28,7 @@ export function Navbar() {
   const [showAcrylicDropdown, setShowAcrylicDropdown] = useState(false);
   const [showShopDropdown, setShowShopDropdown] = useState(false);
   const [showCustomDesignsDropdown, setShowCustomDesignsDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const { user, logout, accessToken } = useContext(AuthContext);
   const navigate = useNavigate();
   const [atTop, setAtTop] = useState(true);
@@ -47,6 +48,7 @@ export function Navbar() {
   const acrylicTimerRef = useRef<any>(null);
   const shopTimerRef = useRef<any>(null);
   const customDesignsTimerRef = useRef<any>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   const spiritualActive =
     showFramesDropdown || isActive('/spiritual-art-gallery');
@@ -210,6 +212,23 @@ export function Navbar() {
     }
   };
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    if (showProfileDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown]);
+
   // Dynamic transparency to show hero image fully
   const transparent = !isMobile && atTop && location.pathname === '/';
 
@@ -256,7 +275,7 @@ export function Navbar() {
                 onMouseEnter={handleShopEnter}
                 onMouseLeave={handleShopLeave}
               >
-               <button
+                <button
                   className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
                     backgroundColor: showShopDropdown || isActive('/shop') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
@@ -556,7 +575,7 @@ export function Navbar() {
                           { label: 'Abstract Art', to: '/new-art-gallery?category=Abstract Art', category: 'Abstract Art' },
                           { label: 'Bollywood Art', to: '/new-art-gallery?category=Bollywood Art', category: 'Bollywood Art' },
                           { label: 'Couple Art', to: '/new-art-gallery?category=Couple Art', category: 'Couple Art' },
-                          
+
                         ].map((item, idx) => (
                           <Link
                             key={item.label}
@@ -646,7 +665,7 @@ export function Navbar() {
                           { label: 'Wings', to: '/lighting?category=Wings', category: 'Wings' },
                           { label: 'Kids', to: '/lighting?category=Kids', category: 'Kids' },
                           // { label: 'Christmas', to: '/lighting?category=Christmas', category: 'Christmas' },
-                          
+
                         ].map((item, idx) => (
                           <Link
                             key={item.label}
@@ -924,9 +943,10 @@ export function Navbar() {
 
               {/* User/Login - Desktop Only */}
               {user ? (
-                <div className="relative group hidden md:flex">
+                <div ref={profileDropdownRef} className="relative hidden md:flex">
                   <button
-                    className="inline-flex items-center gap-2  p-2 rounded-lg transition bg-teal-600 cursor-pointer"
+                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    className="inline-flex items-center gap-2 p-2 rounded-lg transition bg-teal-600 cursor-pointer"
                     style={{ color: navIconColor }}
                   >
                     <User className="w-5 h-5 text-white" />
@@ -936,29 +956,48 @@ export function Navbar() {
                   </button>
 
                   {/* Dropdown Menu */}
-                  <div
-                    className="absolute right-0 top-full mt-2 w-48 rounded-xl shadow-lg py-2 hidden group-hover:block"
-                    style={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', zIndex: 100 }}
-                  >
-                    <Link
-                      to="/account"
-                      className="block px-6 py-2 transition"
-                      style={{ fontWeight: 500, color: '#374151' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#14b8a6';
-                        e.currentTarget.style.color = '#eef3f2ff';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#374151';
-                      }}
+                  {showProfileDropdown && (
+                    <div
+                      className="absolute right-0 top-full mt-2 w-48 rounded-xl shadow-lg py-2"
+                      style={{ backgroundColor: '#ffffff', border: '1px solid #e5e7eb', zIndex: 100 }}
                     >
-                      My Account
-                    </Link>
-                    {user.role === 'admin' && (
                       <Link
-                        to="/admin"
-                        className="block px-4 py-2 transition"
+                        to="/account"
+                        onClick={() => setShowProfileDropdown(false)}
+                        className="block px-6 py-2 transition"
+                        style={{ fontWeight: 500, color: '#374151' }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#14b8a6';
+                          e.currentTarget.style.color = '#eef3f2ff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = '#374151';
+                        }}
+                      >
+                        My Account
+                      </Link>
+                      {user.role === 'admin' && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setShowProfileDropdown(false)}
+                          className="block px-4 py-2 transition"
+                          style={{ fontWeight: 500, color: '#374151' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                            e.currentTarget.style.color = '#14b8a6';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.color = '#374151';
+                          }}
+                        >
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      <button
+                        onClick={() => { setShowProfileDropdown(false); logout(); }}
+                        className="block w-full text-left px-4 py-2 transition cursor-pointer"
                         style={{ fontWeight: 500, color: '#374151' }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.backgroundColor = '#f3f4f6';
@@ -969,25 +1008,10 @@ export function Navbar() {
                           e.currentTarget.style.color = '#374151';
                         }}
                       >
-                        Admin Dashboard
-                      </Link>
-                    )}
-                    <button
-                      onClick={logout}
-                      className="block w-full text-left px-4 py-2 transition"
-                      style={{ fontWeight: 500, color: '#374151' }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#f3f4f6';
-                        e.currentTarget.style.color = '#14b8a6';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.color = '#374151';
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link

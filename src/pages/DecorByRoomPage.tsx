@@ -616,30 +616,62 @@ export default function DecorByRoomPage() {
                     </div>
                   )}
                 </div>
-                  {/* Price Range */}
-                                <div className="mb-6">
-                                    <h3 className="mb-3" style={{ fontWeight: 700, color: '#1f2937' }}>
-                                        Price Range
-                                    </h3>
-                                    <div className="space-y-2">
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="10000"
-                                            value={filters.priceMax}
-                                            onChange={(e) =>
-                                                setFilters(prev => ({ ...prev, priceMax: Number(e.target.value) }))
-                                            }
-                                            className="w-full"
-                                            style={{ accentColor: '#14b8a6' }}
-                                        />
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span style={{ color: '#6b7280' }}>₹{filters.priceMin}</span>
-                                            <span style={{ color: '#6b7280' }}>₹{filters.priceMax}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                {/* Layout Filter */}
+                <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>
+                  <button
+                    onClick={() => toggleSection('layout')}
+                    className="flex items-center justify-between w-full mb-3 transition px-2 py-1 bg-teal rounded-lg"
+                    style={{ fontWeight: 700, color: '#1f2937' }}
+                  >
+                    <h3 className="text-white">Layout</h3>
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${expandedSections.layout ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {expandedSections.layout && (
+                    <div className="flex flex-wrap gap-2">
+                      {LAYOUT_OPTIONS.map(layout => (
+                        <button
+                          key={layout}
+                          onClick={() => toggleFilter('layouts', layout)}
+                          className="px-4 py-2 rounded-lg border-2 text-sm transition-all transform active:scale-95"
+                          style={{
+                            backgroundColor: filters.layouts.includes(layout) ? '#14b8a6' : 'white',
+                            color: filters.layouts.includes(layout) ? 'white' : '#374151',
+                            borderColor: filters.layouts.includes(layout) ? '#14b8a6' : '#d1d5db',
+                            fontWeight: 600
+                          }}
+                        >
+                          {layout}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
+                {/* Price Range */}
+                <div className="mb-6">
+                  <h3 className="mb-3" style={{ fontWeight: 700, color: '#1f2937' }}>
+                    Price Range
+                  </h3>
+                  <div className="space-y-2">
+                    <input
+                      type="range"
+                      min="0"
+                      max="10000"
+                      value={filters.priceMax}
+                      onChange={(e) =>
+                        setFilters(prev => ({ ...prev, priceMax: Number(e.target.value) }))
+                      }
+                      className="w-full"
+                      style={{ accentColor: '#14b8a6' }}
+                    />
+                    <div className="flex items-center justify-between text-sm">
+                      <span style={{ color: '#6b7280' }}>₹{filters.priceMin}</span>
+                      <span style={{ color: '#6b7280' }}>₹{filters.priceMax}</span>
+                    </div>
+                  </div>
+                </div>
                 {activeFilterCount > 0 && (
                   <button
                     onClick={clearFilters}
@@ -792,14 +824,6 @@ export default function DecorByRoomPage() {
         priceBounds={{ min: 0, max: 10000 }}
       />
 
-      <button
-        onClick={() => setShowFilters(true)}
-        className="fixed bottom-6 right-4 md:hidden rounded-full border w-12 h-12 flex items-center justify-center shadow-lg z-50"
-        style={{ borderColor: '#334155', backgroundColor: '#0f172a', color: '#e5e7eb' }}
-      >
-        <span className="sr-only">Filters</span>
-        <Filter className="w-5 h-5" />
-      </button>
 
       <Footer />
     </div >

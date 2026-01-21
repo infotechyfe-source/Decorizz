@@ -298,8 +298,8 @@ export default function HomePage() {
   }, []);
 
   const { getImage: getCategoryImage } = useCategoryImages();
-  const heroImagesDesktop = (newProducts.length ? newProducts : featuredProducts).slice(0, 2).map((p) => optimizeImage(p.image, 1200));
-  const heroImagesMobile = (newProducts.length ? newProducts : featuredProducts).slice(0, 2).map((p) => optimizeImage(p.image, 800));
+  const heroImagesDesktop = (newProducts.length ? newProducts : featuredProducts).slice(5, 7).map((p) => optimizeImage(p.image, 1200));
+  const heroImagesMobile = (newProducts.length ? newProducts : featuredProducts).slice(5, 7).map((p) => optimizeImage(p.image, 800));
 
   const heroImages = viewportW < 768 ? heroImagesMobile : heroImagesDesktop;
 

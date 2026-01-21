@@ -322,8 +322,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
 
                 </div>
 
-                {/* Footer Actions - Enhanced */}
-                <div className="p-1 border-gray-200 bg-gradient-to-t from-gray-50 to-white z-20">
+               {/* Footer Actions - Enhanced */}
+                <div className="py-2 px-6 pt-8 border-gray-600 bg-gradient-to-t from-gray-200 to-white z-20">
 
                     {/* User Section */}
                     {user ? (
@@ -331,10 +331,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white hover:bg-red-50 text-red-500 transition-colors border text-xs font-medium w-full"
+                            className="flex w-full items-center justify-center gap-3 bg-gradient-to-r from-red-500 to-red-600 text-white py-2 rounded-xl font-bold shadow-lg shadow-red-200/50 active:scale-[0.98] transition-all duration-200 hover:from-red-600 hover:to-red-700 cursor-pointer"
                         >
-                            <LogOut className="w-3.5 h-3.5" />
-                            Logout
+                            <LogOut className="w-5 h-5" />
+                            <span>Logout</span>
                         </button>
 
                     ) : (
@@ -397,8 +397,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                             © 2025 Decorizz. All rights reserved.
                         </p>
                     </div>
-
-
 
                 </div>
             </div>

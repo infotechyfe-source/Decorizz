@@ -606,14 +606,7 @@ export default function SpiritualArtGalleryPage() {
                 </div>
             </div>
 
-            <button
-                onClick={() => setShowFilters(true)}
-                className="fixed bottom-6 right-4 md:hidden rounded-full border w-12 h-12 flex items-center justify-center shadow-lg z-50"
-                style={{ borderColor: '#334155', backgroundColor: '#0f172a', color: '#e5e7eb' }}
-            >
-                <span className="sr-only">Filters</span>
-                <Filter className="w-6 h-6" />
-            </button>
+            
 
             <Footer />
         </div>

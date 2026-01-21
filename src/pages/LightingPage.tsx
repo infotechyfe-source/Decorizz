@@ -80,7 +80,7 @@ function SortDropdown({ value, onChange }) {
 }
 
 // Custom Lighting Categories - matches Neon Sign navbar dropdown
-const LIGHTING_CATEGORIES = ['Gods', 'Cafe', 'Gym', 'Car', 'Gaming', 'Wings', 'Kids', 'Christmas'];
+const LIGHTING_CATEGORIES = ['Gods', 'Cafe', 'Gym', 'Car', 'Gaming', 'Wings', 'Kids'];
 
 // Simple Fisher–Yates shuffle
 function shuffleArray<T>(array: T[]): T[] {
@@ -571,14 +571,6 @@ export default function LightingPage() {
                 priceBounds={{ min: 0, max: 10000 }}
             />
 
-            <button
-                onClick={() => setShowFilters(true)}
-                className="fixed bottom-6 right-4 md:hidden rounded-full border w-12 h-12 flex items-center justify-center shadow-lg z-20"
-                style={{ borderColor: '#334155', backgroundColor: '#0f172a', color: '#e5e7eb' }}
-            >
-                <span className="sr-only">Filters</span>
-                <Filter className="w-5 h-5" />
-            </button>
 
             <Footer />
         </div>

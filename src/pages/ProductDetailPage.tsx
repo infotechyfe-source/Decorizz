@@ -897,29 +897,67 @@ export default function ProductDetailPage() {
   }, [product]);
 
 
-  const activeImage =
+  const activeImage = selectedImage || (
     islighting &&
       selectedColor &&
       neonImageMap[selectedColor?.toLowerCase()]
       ? neonImageMap[selectedColor.toLowerCase()]
-      : product?.image || "";
+      : product?.image || ""
+  );
 
 
   // Loading is handled by RouteLoader - no need for individual page spinner
 
+  // Shimmer Skeleton for loading state
   if (!product && !isNeon) {
     return (
-      <div className="min-h-screen content-offset">
+      <div className="min-h-screen content-offset premium-bg">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-          <h1 className="text-3xl font-semibold mb-4" style={{ color: '#1f2937' }}>Product Not Found</h1>
-          <button
-            onClick={() => navigate('/shop')}
-            className="px-6 py-2 rounded-md text-white"
-            style={{ backgroundColor: '#14b8a6' }}
-          >
-            Back to Shop
-          </button>
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Image Skeleton */}
+            <div className="space-y-4">
+              <div className="skeleton skeleton-img rounded-2xl" style={{ aspectRatio: '1 / 1' }} />
+              <div className="flex gap-2 justify-center">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="skeleton w-16 h-16 rounded-lg" />
+                ))}
+              </div>
+            </div>
+            {/* Info Skeleton */}
+            <div className="space-y-6">
+              <div className="flex gap-2">
+                <div className="skeleton skeleton-line w-20 h-8 rounded-lg" />
+                <div className="skeleton skeleton-line w-24 h-8 rounded-lg" />
+              </div>
+              <div className="skeleton skeleton-line lg w-3/4 h-10" />
+              <div className="flex gap-3 items-center">
+                <div className="skeleton skeleton-line w-24 h-6" />
+                <div className="skeleton skeleton-line w-32 h-8" />
+              </div>
+              <div className="skeleton skeleton-line w-1/2 h-4" />
+              <div className="space-y-3 mt-6">
+                <div className="skeleton skeleton-line w-24 h-6" />
+                <div className="flex gap-3">
+                  <div className="skeleton w-24 h-10 rounded-lg" />
+                  <div className="skeleton w-24 h-10 rounded-lg" />
+                </div>
+              </div>
+              <div className="space-y-3 mt-4">
+                <div className="skeleton skeleton-line w-32 h-6" />
+                <div className="flex gap-2 flex-wrap">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="skeleton w-16 h-10 rounded-lg" />
+                  ))}
+                </div>
+              </div>
+              <div className="flex gap-4 mt-8">
+                <div className="skeleton flex-1 h-14 rounded-xl" />
+                <div className="skeleton flex-1 h-14 rounded-xl" />
+                <div className="skeleton w-14 h-14 rounded-xl" />
+              </div>
+            </div>
+          </div>
         </div>
         <Footer />
       </div>
@@ -1196,13 +1234,13 @@ export default function ProductDetailPage() {
       {/* Decorative Squares (top) */}
       <div className="flex justify-between max-w-7xl mx-auto px-4 pt-12">
         <div className="flex gap-2">
-          <div className="w-10 h-10 border-2 border-gray-200 rounded"></div>
-          <div className="w-10 h-10 border-2 border-gray-200 rounded"></div>
+          <div className="w-10 h-12 border-2 border-gray-600 rounded animate-pulse" style={{ animationDelay: '0.1s', animationDuration: '2s' }}></div>
+          <div className="w-10 h-12 border-2 border-teal-300 rounded animate-bounce" style={{ animationDelay: '0.2s', animationDuration: '3s' }}></div>
         </div>
 
         <div className="flex gap-2">
-          <div className="w-10 h-10 border-2 border-gray-200 rounded "></div>
-          <div className="w-10 h-10 border-2 border-gray-200 rounded" ></div>
+          <div className="w-10 h-12 border-2 border-teal-300 rounded animate-bounce" style={{ animationDelay: '0.4s', animationDuration: '3s' }}></div>
+          <div className="w-10 h-12 border-2 border-gray-600 rounded animate-pulse" style={{ animationDelay: '0.6s', animationDuration: '2s' }}></div>
         </div>
       </div>
 
@@ -1221,9 +1259,9 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-h-none lg:max-h-[90vh]">
 
           {/* Image Box */}
-          <div className="soft-card rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', color: '#4b5563'}}>
+          <div className="soft-card rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', color: '#4b5563' }}>
 
-            
+
             <div
               ref={imageContainerRef}
               className="rounded-lg overflow-hidden"
@@ -1360,7 +1398,7 @@ export default function ProductDetailPage() {
             )}
 
             {/* Quick Specs to avoid empty space on left */}
-            {!product.isCustomCanvas && (
+            {/* {!product.isCustomCanvas && (
               <div className="hidden lg:block mt-4 rounded-2xl p-4 soft-card" style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}>
                 <h3 className="text-lg font-semibold mb-3" style={{ color: '#1f2937' }}>Quick Specs</h3>
                 <div className="grid grid-cols-2 gap-2 text-sm" style={{ color: '#4b5563' }}>
@@ -1386,7 +1424,7 @@ export default function ProductDetailPage() {
                   )}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Custom Canvas - Instructions & Photo Upload - Below How it works */}
             {product.isCustomCanvas && (
@@ -1470,8 +1508,8 @@ export default function ProductDetailPage() {
 
           {/* Product Info */}
           <div
-            className="max-h-[80vh] overflow-y-auto pr-2"
-            style={{ overscrollBehavior: 'contain' }}
+            className="lg:max-h-[80vh] lg:overflow-y-auto lg:pr-2"
+            // style={{ overscrollBehavior: 'contain' }}
             onWheel={(e) => {
               const element = e.currentTarget;
               const isAtTop = element.scrollTop === 0;
@@ -1664,7 +1702,7 @@ export default function ProductDetailPage() {
                     { name: 'Orange', hex: '#ff9f00' },
                     { name: 'Red', hex: '#ff1a1a' },
                     { name: 'Purple', hex: '#9b5cff' },
-                    { name: 'Ice', hex: '#e9f7ff'},
+                    { name: 'Ice', hex: '#e9f7ff' },
 
                   ].map(({ name, hex }) => {
                     const selected = selectedColor === hex.toLowerCase().trim();
@@ -1675,7 +1713,7 @@ export default function ProductDetailPage() {
                         onClick={() => setSelectedColor(hex.toLowerCase().trim())}
                         title={name}
                         className={`
-              relative cursor-pointer w-10 h-10  rounded-lg shrink-0 transition-all duration-200 
+              relative cursor-pointer w-10 h-10  rounded-lg shrink-0 transition-all duration-200
               ${selected
                             ? 'border-2 border-teal-500 scale-105'
                             : 'border border-gray-300 hover:scale-105'}
@@ -1724,7 +1762,7 @@ export default function ProductDetailPage() {
             )}
 
             {/* Quantity */}
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <h3 className="mb-2" style={{ color: '#1f2937' }}>Quantity</h3>
               <div className="flex items-center gap-4">
                 <button
@@ -1742,7 +1780,7 @@ export default function ProductDetailPage() {
                   +
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Buttons */}
             <div className="flex gap-4 mb-8">
@@ -1750,11 +1788,11 @@ export default function ProductDetailPage() {
               {/* Add to Cart */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 px-10 py-3 rounded-xl transition-all duration-200 tracking-widest hover:bg-gray-50 cursor-pointer"
+                className="flex-1 px-3 py-2 rounded-xl transition-all duration-200 tracking-widest hover:bg-gray-50 cursor-pointer"
                 style={{ border: '1px solid #d1d5db', backgroundColor: 'transparent', color: '#374151', fontWeight: 700 }}
               >
                 <div className="flex gap-2 items-center justify-center">
-                  <ShoppingCart className="w-5 h-5" color="#374151" />
+                  <ShoppingCart className="w-8 h-8" color="#374151" />
                   ADD TO CART
                 </div>
               </button>
@@ -1762,7 +1800,7 @@ export default function ProductDetailPage() {
               {/* Buy Now */}
               <button
                 onClick={handleBuyNow}
-                className="flex-1 px-10 py-3 rounded-xl text-black font-semibold transition-all duration-200 tracking-widest cursor-pointer"
+                className="flex-1 px-3 py-2 rounded-xl text-black font-semibold transition-all duration-200 tracking-widest cursor-pointer"
                 style={{ backgroundColor: '#14b8a6', color: '#0b1220', fontWeight: 700 }}
               >
                 BUY NOW
@@ -1772,7 +1810,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToWishlist}
                 className={`
-                        w-12 h-12 rounded-xl border-2
+                        w-14 h-16 rounded-xl border-2
                         flex items-center justify-center
                         transition-all duration-200 cursor-pointer
                         ${isInWishlist
