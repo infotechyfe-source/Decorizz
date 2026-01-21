@@ -256,18 +256,18 @@ export function Navbar() {
                 onMouseEnter={handleShopEnter}
                 onMouseLeave={handleShopLeave}
               >
-                <button
+               <button
                   className="rounded-full px-4 py-2 text-sm transition hover:text-teal-600 cursor-pointer"
                   style={{
-                    backgroundColor: isActive('/shop') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
+                    backgroundColor: showShopDropdown || isActive('/shop') ? 'white' : (transparent ? 'rgba(255,255,255,0.2)' : 'rgba(233, 229, 220, 0.5)'),
                     backdropFilter: transparent ? 'blur(10px)' : 'none',
-                    boxShadow: isActive('/shop') ? '0 0 0 2px #14b8a6' : 'none',
+                    boxShadow: showShopDropdown || isActive('/shop') ? '0 0 0 2px #14b8a6' : 'none',
                     fontWeight: 600,
                     color: '#3b2f27'
                   }}
                   onClick={() => navigate('/shop')}
                 >
-                  <span className={isActive('/shop') ? 'text-brand' : 'text-gray-900'}>Shop
+                  <span className={showShopDropdown || isActive('/shop') ? 'text-teal-600' : 'text-gray-900'}>Shop
                     <svg className={`ml-1 inline-block w-4 h-4 transition-transform ${showShopDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                     </svg>

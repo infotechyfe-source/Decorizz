@@ -99,8 +99,6 @@ const navItems = [
             { label: 'Gaming', to: '/lighting?category=Gaming', category: 'Gaming' },
             { label: 'Wings', to: '/lighting?category=Wings', category: 'Wings' },
             { label: 'Kids', to: '/lighting?category=Kids', category: 'Kids' },
-            { label: 'Christmas', to: '/lighting?category=Christmas', category: 'Christmas' },
-            { label: 'Restaurant & Bar', to: '/lighting?category=Restaurant and Bar', category: 'Restaurant and Bar' },
         ]
     },
 
@@ -288,7 +286,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                                                     </span>
                                                     <ChevronRight className="w-4 h-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
                                                 </Link>
-                                                <br />
+                                               
 
                                                 {item.submenu.map((sub, subIdx) => (
                                                     <Link

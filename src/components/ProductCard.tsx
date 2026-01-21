@@ -68,7 +68,7 @@ function ProductCardComponent({
 
   // Determine effective price (Landscape fallback: 1880)
   const isLandscape = product.layout?.toLowerCase() === 'landscape';
-  const effectivePrice = overridePrice ?? (isLandscape ? 1880 : product.price);
+  const effectivePrice = overridePrice ?? (isLandscape ? 2699 : product.price);
 
   const handleAddToWishlist = async (e: React.MouseEvent) => {
     e.preventDefault();

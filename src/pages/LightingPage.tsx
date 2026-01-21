@@ -22,7 +22,7 @@ function SortDropdown({ value, onChange }) {
     return (
         <div className="relative sort-dropdown z-40">
             <button
-                className="border px-4 py-2 rounded-xl font-medium w-full flex items-center justify-between"
+                className="border px-4 py-2 rounded-xl font-medium w-full flex items-center justify-between cursor-pointer"
                 style={{
                     borderColor: isDarkTheme ? '#334155' : '#d1d5db',
                     backgroundColor: isDarkTheme ? '#0f172a' : '#ffffff',

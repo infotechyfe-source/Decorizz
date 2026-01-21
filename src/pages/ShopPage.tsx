@@ -42,7 +42,7 @@ function SortDropdown({ value, onChange }) {
           borderColor: open ? '#14b8a6' : (isDarkTheme ? '#334155' : '#e5e7eb')
         }}
       >
-        <span className={`${open ? 'text-teal-600' : ''} transition-colors whitespace-nowrap`}>
+        <span className={`${open ? 'text-teal-600' : ''} transition-colors whitespace-nowrap cursor-pointer`}>
           {SORT_OPTIONS.find(o => o.value === value)?.label}
         </span>
         <ChevronDown
@@ -232,7 +232,7 @@ export default function ShopPage() {
     '36X36': { Rolled: 3199, Canvas: 4599, Frame: 4999 },
     '20X20': { Rolled: 1299, Canvas: 1899, Frame: 1999 },
     '30X30': { Rolled: 2199, Canvas: 3199, Frame: 3499 },
-    '36X18': { Rolled: 1880, Canvas: 2699, Frame: 2899 },
+    '36X18': { Rolled: 2699, Canvas: 2699, Frame: 2899 },
     '48X24': { Rolled: 2799, Canvas: 3299, Frame: 3599 },
   };
 
@@ -669,7 +669,7 @@ export default function ShopPage() {
                 </div> */}
 
                 {/* Layout Filter */}
-                <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>
+                {/* <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>
                   <button
                     onClick={() => toggleSection('layout')}
                     className="flex items-center justify-between w-full mb-3 transition px-2 py-1 rounded-lg bg-teal"
@@ -699,7 +699,7 @@ export default function ShopPage() {
                       ))}
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 {/* Price Range */}
                 <div className="mb-6">
@@ -763,7 +763,7 @@ export default function ShopPage() {
 
               <p className="font-medium text-gray-500">
                 <span className="font-bold text-teal-500">
-                  {filteredProducts.length}
+                  {finalFilteredProducts.length}
                 </span>
                 {" "}products found
               </p>
@@ -853,7 +853,7 @@ export default function ShopPage() {
                 <button
                   key={opt}
                   onClick={() => handleQuickFilter(opt)}
-                  className="px-4 py-2 rounded-full border text-sm transition"
+                  className="px-4 py-2 rounded-full border text-sm transition cursor-pointer"
                   style={{
                     backgroundColor: activeFilter === opt ? '#14b8a6' : 'white',
                     color: activeFilter === opt ? 'white' : '#374151',
