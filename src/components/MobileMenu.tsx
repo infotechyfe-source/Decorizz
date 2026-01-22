@@ -314,6 +314,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                                 </div>
                             );
                         })}
+
                     </div>
 
                 </div>
