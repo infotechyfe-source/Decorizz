@@ -14,8 +14,6 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 // Fallback placeholder image
 const PLACEHOLDER_IMG = 'https://placehold.co/150x150?text=Loading...';
 
-
-
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);

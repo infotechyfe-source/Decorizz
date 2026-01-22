@@ -11,7 +11,7 @@ const normalizeKey = (key: string) =>
 // All categories used in navbar dropdowns
 export const ALL_CATEGORIES = [
   // Spiritual Art Gallery
-  
+
   'Vastu Yatra Painting', // Also support alternate spelling
   'Ganesh Wall Art',
   'Radha Krishna Art',
@@ -21,7 +21,7 @@ export const ALL_CATEGORIES = [
   'Ma Durga Art',
   'Jesus Art',
   'Islamic Art',
-  
+
   // Decor Your Space
   'Animals Art',
   'Birds Art',
@@ -33,7 +33,7 @@ export const ALL_CATEGORIES = [
   '3 Set Art',
   '2 Set Art',
   'Mandela Art',
-  
+
   // Neon Sign (Lighting)
   'Gods',
   'Cafe',
@@ -44,7 +44,7 @@ export const ALL_CATEGORIES = [
   'Kids',
   'Christmas',
   'Restaurant and Bar',
-  
+
   // New Art Gallery
   'Gen Z Art',
   'Living Room Art',
@@ -54,7 +54,7 @@ export const ALL_CATEGORIES = [
   'Abstract Art',
   'Bollywood Art',
   'Couple Art',
-  
+
   // Acrylic Art Gallery
   'Animal Acrylic Art',
   'Spiritual Acrylic Art',
@@ -73,7 +73,6 @@ export const ALL_CATEGORIES = [
   // Custom Neon Sign
   'Custom Neon Sign',
 ];
-
 export interface CategoryImages {
   [category: string]: string;
 }
@@ -86,7 +85,7 @@ function getInitialCachedData(): CategoryImages {
   try {
     const cachedData = localStorage.getItem(CACHE_KEY);
     const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
-    
+
     if (cachedData && cacheExpiry) {
       const expiryTime = parseInt(cacheExpiry, 10);
       if (Date.now() < expiryTime) {
@@ -119,7 +118,7 @@ export function useCategoryImages() {
       setLoading(false);
       return;
     }
-    
+
     fetchCategoryImages();
   }, []);
 
@@ -128,7 +127,7 @@ export function useCategoryImages() {
       // Check cache first (double-check in case of race condition)
       const cachedData = localStorage.getItem(CACHE_KEY);
       const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
-      
+
       if (cachedData && cacheExpiry) {
         const expiryTime = parseInt(cacheExpiry, 10);
         if (Date.now() < expiryTime) {
@@ -148,17 +147,17 @@ export function useCategoryImages() {
           },
         }
       );
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
-      
+
       const data = await response.json();
       const products = data.products || [];
 
       // Build category -> image map
       const imageMap: CategoryImages = {};
-      
+
       if (products && products.length > 0) {
         for (const product of products) {
           // Handle image field - can be 'image' (single) or 'images' (array)
@@ -168,12 +167,12 @@ export function useCategoryImages() {
           } else if (product.image) {
             firstImage = product.image;
           }
-          
+
           if (!firstImage) continue;
-          
+
           // Handle both single category and categories array
           const productCategories: string[] = [];
-          
+
           if (product.categories && Array.isArray(product.categories)) {
             productCategories.push(...product.categories);
           }
@@ -183,9 +182,9 @@ export function useCategoryImages() {
 
           // Also add layout to valid keys (for Square, Circle, Landscape)
           if (product.layout) {
-             // Normalized check to match standard casing if needed, but shop usually uses capital first
-             const layout = product.layout.charAt(0).toUpperCase() + product.layout.slice(1).toLowerCase();
-             productCategories.push(layout);
+            // Normalized check to match standard casing if needed, but shop usually uses capital first
+            const layout = product.layout.charAt(0).toUpperCase() + product.layout.slice(1).toLowerCase();
+            productCategories.push(layout);
           }
           // Add format (Canvas, Frame, Rolled)
           if (product.format) {
@@ -194,26 +193,27 @@ export function useCategoryImages() {
             productCategories.push(formatNorm);
           }
           if (product.subsection) {
-             // Navbar expects "2 Set" / "3 Set", DB might have "2-Set"
-             // Normalize to ensure key match
-             const subsection = product.subsection.replace('-', ' ');
-             productCategories.push(subsection);
-             // Also push original just in case
-             productCategories.push(product.subsection); 
+            // Navbar expects "2 Set" / "3 Set", DB might have "2-Set"
+            // Normalize to ensure key match
+            const subsection = product.subsection.replace('-', ' ');
+            productCategories.push(subsection);
+            // Also push original just in case
+            productCategories.push(product.subsection);
           }
-          
+
           // Assign image to each category/layout/subsection if not already assigned
          for (const cat of productCategories) {
   const catKey = normalizeKey(cat);
 
-  const isPrimaryCategory =
-    ALL_CATEGORIES.includes(catKey) &&
-    !['2 Set', '3 Set', '2-Set', '3-Set'].includes(catKey);
+  // Find the actual category key in ALL_CATEGORIES
+  const matchKey = ALL_CATEGORIES.find(c => normalizeKey(c) === catKey);
 
-  if (isPrimaryCategory && !imageMap[catKey] && firstImage) {
-    imageMap[catKey] = firstImage;
+  if (matchKey && !imageMap[matchKey] && firstImage) {
+    imageMap[matchKey] = firstImage;
   }
 }
+
+
 
         }
       }
@@ -224,7 +224,7 @@ export function useCategoryImages() {
           imageMap[cat] = DEFAULT_IMAGE;
         }
       }
-
+     console.log('Category Images Map:', imageMap);
       // Save to cache
       localStorage.setItem(CACHE_KEY, JSON.stringify(imageMap));
       localStorage.setItem(CACHE_EXPIRY_KEY, String(Date.now() + CACHE_DURATION));
@@ -235,7 +235,7 @@ export function useCategoryImages() {
       console.error('Error fetching category images:', err);
       setError(err.message);
       setLoading(false);
-      
+
       // Try to use cached data even if expired
       const cachedData = localStorage.getItem(CACHE_KEY);
       if (cachedData) {
