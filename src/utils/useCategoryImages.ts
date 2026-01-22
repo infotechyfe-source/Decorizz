@@ -5,6 +5,8 @@ import { projectId, publicAnonKey } from './supabase/info';
 const CACHE_KEY = 'category_images_cache_v6';
 const CACHE_EXPIRY_KEY = 'category_images_cache_expiry';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const normalizeKey = (key: string) =>
+  key.trim().replace(/-/g, ' ').replace(/\s+/g, ' ');
 
 // All categories used in navbar dropdowns
 export const ALL_CATEGORIES = [
@@ -201,11 +203,18 @@ export function useCategoryImages() {
           }
           
           // Assign image to each category/layout/subsection if not already assigned
-          for (const cat of productCategories) {
-            if (!imageMap[cat] && firstImage) {
-              imageMap[cat] = firstImage;
-            }
-          }
+         for (const cat of productCategories) {
+  const catKey = normalizeKey(cat);
+
+  const isPrimaryCategory =
+    ALL_CATEGORIES.includes(catKey) &&
+    !['2 Set', '3 Set', '2-Set', '3-Set'].includes(catKey);
+
+  if (isPrimaryCategory && !imageMap[catKey] && firstImage) {
+    imageMap[catKey] = firstImage;
+  }
+}
+
         }
       }
 

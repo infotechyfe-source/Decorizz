@@ -314,10 +314,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                                 </div>
                             );
                         })}
-
-
-                        {/* Simple Links */}
-
                     </div>
 
                 </div>
@@ -347,7 +343,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                             <span className=''>Login to Account</span>
                         </Link>
                     )}
-
 
                     {/* Quick Actions - Bottom Bar */}
                     <div className="flex items-center justify-between pt-2">
@@ -387,9 +382,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, cartCou
                         ))}
                     </div>
 
-
                     {/* Cart and Wishlist Links (Mobile Exclusive) */}
-
 
                     {/* User Profile / Login */}
                     <div className="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-100 mt-auto">

@@ -1275,7 +1275,15 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-h-none lg:max-h-[90vh]">
 
           {/* Image Box */}
-          <div className="soft-card rounded-2xl p-4" style={{ backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', color: '#4b5563' }}>
+          <div
+            className="soft-card rounded-2xl p-4 sticky top-16 sm:static z-30"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.6)',
+              backdropFilter: 'blur(10px)',
+              color: '#4b5563'
+            }}
+          >
+
 
 
             <div
@@ -1380,7 +1388,7 @@ export default function ProductDetailPage() {
                 >
                   {/* Static thumbnails - centered, no sliding */}
                   <div
-                    className="thumb-slider flex gap-2 sm:gap-3 justify-center"
+                    className="thumb-slider flex gap-2 sm:gap-3 justify-start sm:justify-center px-2"
                   >
                     {/* All thumbnails - responsive sizing */}
                     {optimizedThumbItems.map((item, index) => (
@@ -1956,7 +1964,6 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Reviews Section */}
-
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
