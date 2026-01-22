@@ -82,8 +82,6 @@ function SortDropdown({ value, onChange }) {
   );
 }
 
-
-
 const ROOM_OPTIONS = [
   { name: 'Home Bar' },
   { name: 'Bath Space' },
@@ -99,7 +97,6 @@ const ROOM_OPTIONS = [
   { name: 'Office / Study Zone' },
   { name: 'Pooja Room' },
 ];
-
 
 const LAYOUT_OPTIONS = ['Portrait', 'Square', 'Landscape'];
 const SIZE_OPTIONS = ['8×12', '12×18', '18×24', '20×30', '24×36', '30×40', '36×48', '48×66', '18×18', '24×24', '36×36', '20×20', '30×30'];
@@ -118,8 +115,6 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return arr;
 }
-
-
 interface Product {
   id: string;
   name: string;
@@ -525,32 +520,11 @@ export default function DecorByRoomPage() {
 
             {/* Filter Panel */}
             <div
-              className="
-    
-
-    max-lg:fixed
-    max-lg:inset-0
-    max-lg:overflow-y-auto
-    max-lg:top-0
-
-    lg:rounded-3xl
-    max-lg:rounded-none
-    shadow-2xl
-    flex flex-col
-    z-20
-    custom-scrollbar
-
-    lg:bg-white/100
-    lg:backdrop-blur-md
-    max-lg:bg-white
-    max-lg:w-full
-    max-lg:h-full
-  "
+              className="max-lg:fixed max-lg:inset-0 max-lg:overflow-y-auto max-lg:top-0 lg:rounded-3xl max-lg:rounded-none shadow-2xl flex flex-col z-20 custom-scrollbar lg:bg-white/100 lg:backdrop-blur-md max-lg:bg-white max-lg:w-full max-lg:h-full"
               style={{
                 border: '1px solid #e5e7eb',
               }}
             >
-
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: '#e5e7eb' }}>
                 <div className="flex items-center gap-3">
@@ -572,8 +546,6 @@ export default function DecorByRoomPage() {
                 >
                   <X className="w-6 h-6" />
                 </button>
-
-
               </div>
 
               {/* Scrollable Content */}

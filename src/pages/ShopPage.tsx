@@ -715,7 +715,7 @@ export default function ShopPage() {
                       onChange={(e) =>
                         setFilters(prev => ({ ...prev, priceMax: Number(e.target.value) }))
                       }
-                      className="w-full"
+                      className="w-full cursor-pointer"
                       style={{ accentColor: '#14b8a6' }}
                     />
                     <div className="flex items-center justify-between text-sm">

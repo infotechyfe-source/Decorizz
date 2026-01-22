@@ -78,7 +78,7 @@ function SortDropdown({ value, onChange }: { value: string; onChange: (val: stri
     );
 }
 
-const LAYOUT_OPTIONS = ['Portrait', 'Square', 'Landscape'];
+const LAYOUT_OPTIONS = ['Portrait', 'Square', 'Landscape', 'Circle'];
 
 // Spiritual Art categories only
 const SPIRITUAL_CATEGORIES = [
@@ -252,7 +252,10 @@ export default function SpiritualArtGalleryPage() {
         let result = [...shuffledProducts];
 
         if (filters.layouts.length > 0) {
-            result = result.filter(p => filters.layouts.includes(p.layout || ''));
+            result = result.filter(p =>
+                filters.layouts.includes(p.layout || '') ||
+                filters.layouts.includes(p.subsection || '')
+            );
         }
 
         if (filters.categories.length > 0) {
@@ -421,7 +424,7 @@ export default function SpiritualArtGalleryPage() {
                                 <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>
                                     <button
                                         onClick={() => toggleSection('layout')}
-                                        className="flex items-center justify-between w-full mb-3 transition px-2 py-1 bg-teal rounded-lg"
+                                        className="flex items-center justify-between w-full mb-3 transition px-2 py-1 bg-teal rounded-lg cursor-pointer"
                                         style={{ fontWeight: 700, color: '#1f2937' }}
                                     >
                                         <h3 className="text-white">Layout</h3>
@@ -435,7 +438,7 @@ export default function SpiritualArtGalleryPage() {
                                                 <button
                                                     key={layout}
                                                     onClick={() => toggleFilter('layouts', layout)}
-                                                    className="px-4 py-2 rounded-lg border-2 text-sm transition-all transform active:scale-95"
+                                                    className="px-4 py-2 rounded-lg border-2 text-sm transition-all transform active:scale-95 cursor-pointer"
                                                     style={{
                                                         backgroundColor: filters.layouts.includes(layout) ? '#14b8a6' : 'white',
                                                         color: filters.layouts.includes(layout) ? 'white' : '#374151',
@@ -464,7 +467,7 @@ export default function SpiritualArtGalleryPage() {
                                             onChange={(e) =>
                                                 setFilters(prev => ({ ...prev, priceMax: Number(e.target.value) }))
                                             }
-                                            className="w-full"
+                                            className="w-full cursor-pointer"
                                             style={{ accentColor: '#14b8a6' }}
                                         />
                                         <div className="flex items-center justify-between text-sm">
@@ -605,8 +608,6 @@ export default function SpiritualArtGalleryPage() {
                     </div>
                 </div>
             </div>
-
-            
 
             <Footer />
         </div>

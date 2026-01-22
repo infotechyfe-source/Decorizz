@@ -4,7 +4,7 @@ import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
 import SkeletonProductCard from '../components/SkeletonProductCard';
-import { Filter, X, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Filter, X, ChevronDown } from 'lucide-react';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { MobileFilterSheet } from '../components/MobileFilterSheet';
 
@@ -27,6 +27,8 @@ const NEW_ART_CATEGORIES = [
     'Couple Art',
     'Restaurant and Bar',
 ];
+
+const LAYOUT_OPTIONS = ['Portrait', 'Square', 'Landscape','Circle'];
 
 function SortDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
     const [open, setOpen] = useState(false);
@@ -110,6 +112,7 @@ interface Product {
     colors?: string[];
     material?: string;
     createdAt?: string;
+    layout?: 'Portrait' | 'Square' | 'Landscape';
     subsection?: '2-Set' | '3-Set' | 'Square';
     format?: 'Rolled' | 'Canvas' | 'Frame';
     frameColor?: 'White' | 'Black' | 'Brown';
@@ -117,18 +120,34 @@ interface Product {
 
 export default function NewArtGalleryPage() {
     const [searchParams] = useSearchParams();
+
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [showFilters, setShowFilters] = useState(false);
     const shuffledProducts = useMemo(() => shuffleArray(products), [products]);
 
+    const [selectedLayouts, setSelectedLayouts] = useState<string[]>([]);
+    const [priceMax, setPriceMax] = useState(10000);
+
     const [filters, setFilters] = useState({
         categories: [] as string[],
         sortBy: 'popular',
+        layouts: [] as string[],
+        priceMin: 0,
+        priceMax: 10000,
     });
+
+    useEffect(() => {
+        setFilters(prev => ({ ...prev, layouts: selectedLayouts }));
+    }, [selectedLayouts]);
+
+    useEffect(() => {
+        setFilters(prev => ({ ...prev, priceMax }));
+    }, [priceMax]);
 
     const [expandedSections, setExpandedSections] = useState({
         categories: true,
+        layout: true,
     });
 
     const toggleSection = (section: string) => {
@@ -199,25 +218,38 @@ export default function NewArtGalleryPage() {
         });
     };
 
-    const clearFilters = () => {
-        setFilters({ categories: [], sortBy: 'popular' });
-    };
-
     const filteredProducts = useMemo(() => {
         let result = [...shuffledProducts];
 
+        //  EXISTING: category filter (KEEP AS IS)
         if (filters.categories.length > 0) {
             result = result.filter(p => {
-                const productCategories = p.categories && p.categories.length > 0
-                    ? p.categories
-                    : (p.category ? [p.category] : []);
-                return productCategories.some(cat => filters.categories.includes(cat));
+                const productCategories =
+                    p.categories && p.categories.length > 0
+                        ? p.categories
+                        : (p.category ? [p.category] : []);
+                return productCategories.some(cat =>
+                    filters.categories.includes(cat)
+                );
             });
         }
 
+        // LAYOUT FILTER 
+        if (filters.layouts.length) {
+            result = result.filter(p => p.layout && filters.layouts.includes(p.layout));
+        }
+
+        //  ADD: price filter
+        result = result.filter(p => p.price <= filters.priceMax);
+
+        //  EXISTING: sorting logic (KEEP AS IS)
         switch (filters.sortBy) {
             case 'newest':
-                result.sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime());
+                result.sort(
+                    (a, b) =>
+                        new Date(b.createdAt || '').getTime() -
+                        new Date(a.createdAt || '').getTime()
+                );
                 break;
             case 'price-low':
                 result.sort((a, b) => a.price - b.price);
@@ -229,6 +261,7 @@ export default function NewArtGalleryPage() {
 
         return result;
     }, [shuffledProducts, filters]);
+
 
     const paginatedProducts = useMemo(() => {
         return filteredProducts.slice(0, currentPage * PAGE_SIZE);
@@ -254,6 +287,18 @@ export default function NewArtGalleryPage() {
     useEffect(() => {
         setCurrentPage(1);
     }, [filters]);
+
+    const clearFilters = () => {
+        setFilters({
+            categories: [],
+            sortBy: 'popular',
+            layouts: [],
+            priceMin: 0,
+            priceMax: 10000,
+        });
+        setSelectedLayouts([]);
+        setPriceMax(10000);
+    };
 
     return (
         <div className="min-h-screen content-offset premium-bg">
@@ -352,6 +397,67 @@ export default function NewArtGalleryPage() {
                                         </div>
                                     )}
                                 </div>
+                                {/* Layout Filter */}
+                                <div className="mb-6 pb-6 border-b" style={{ borderColor: '#e5e7eb' }}>
+
+                                    <button
+                                        onClick={() => toggleSection('layout')}
+                                        className="flex items-center justify-between w-full mb-3 transition px-2 py-1 bg-teal rounded-lg cursor-pointer"
+                                        style={{ fontWeight: 700, color: '#1f2937' }}
+                                    >
+                                        <h3 className="text-white">Layout</h3>
+                                        <ChevronDown
+                                            className={`w-4 h-4 transition-transform ${expandedSections.layout ? 'rotate-180' : ''}`}
+                                        />
+                                    </button>
+
+                                    {expandedSections.layout && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {LAYOUT_OPTIONS.map(layout => (
+                                                <button
+                                                    key={layout}
+                                                    onClick={() =>
+                                                        setFilters(prev => ({
+                                                            ...prev,
+                                                            layouts: prev.layouts.includes(layout)
+                                                                ? prev.layouts.filter(l => l !== layout)
+                                                                : [...prev.layouts, layout]
+                                                        }))
+                                                    }
+
+                                                    className="px-4 py-2 rounded-lg border-2 text-sm transition-all transform active:scale-95 cursor-pointer"
+                                                    style={{
+                                                        backgroundColor: filters.layouts.includes(layout) ? '#14b8a6' : 'white',
+                                                        color: filters.layouts.includes(layout) ? 'white' : '#374151',
+                                                        borderColor: filters.layouts.includes(layout) ? '#14b8a6' : '#d1d5db',
+                                                        fontWeight: 600
+                                                    }}
+                                                >
+                                                    {layout}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Price Filter */}
+                                <div className="mb-6">
+                                    <h3 className="mb-3" style={{ fontWeight: 700, color: '#1f2937' }}>
+                                        Price Range
+                                    </h3>
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={10000}
+                                        value={priceMax}
+                                        onChange={e => setPriceMax(Number(e.target.value))}
+                                        className="w-full cursor-pointer"
+                                        style={{ accentColor: '#14b8a6' }}
+                                    />
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        Up to ₹{priceMax}
+                                    </p>
+                                </div>
 
                                 {/* Clear Filters */}
                                 {filters.categories.length > 0 && (
@@ -385,8 +491,11 @@ export default function NewArtGalleryPage() {
                                         </span>
                                     )}
                                 </button>
-                                <p className="text-sm" style={{ color: '#6b7280' }}>
-                                    Showing <span className="font-semibold" style={{ color: '#374151' }}>{filteredProducts.length}</span> products
+                                <p style={{ fontWeight: 500, color: '#6b7280' }}>
+                                    <span style={{ color: '#14b8a6', fontWeight: 700 }}>
+                                        {filteredProducts.length}
+                                    </span>
+                                    {" "}products found
                                 </p>
                             </div>
                             <SortDropdown value={filters.sortBy} onChange={(v) => setFilters(prev => ({ ...prev, sortBy: v }))} />
