@@ -303,10 +303,10 @@ export default function LightingPage() {
         <div className="min-h-screen content-offset premium-bg">
             <Navbar />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Header */}
                 <section className=" mx-auto sm:px-6 mb-12">
-                    <div className="max-w-7xl mx-auto">
+                    <div className="max-w-8xl mx-auto">
                         <div className="premium-card-glow p-8 sm:p-12 animate-fade-scale">
                             <h1 className="text-center custom-heading">
                                 Lighting <span className="text-gradient-teal">Collection</span>
@@ -570,7 +570,6 @@ export default function LightingPage() {
                 onPriceRangeChange={(min, max) => setFilters(prev => ({ ...prev, priceMin: min, priceMax: max }))}
                 priceBounds={{ min: 0, max: 10000 }}
             />
-
 
             <Footer />
         </div>

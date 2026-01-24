@@ -1,27 +1,37 @@
-export const optimizeImage = (url: string, width = 800, quality = 80) => {
+export const optimizeImage = (
+  url: string,
+  width = 800,
+  quality = 80
+) => {
   if (!url) return "";
-  
-  // Handle Cloudinary Upload URLs (already on Cloudinary)
+
+  const q = quality === 100 ? "q_100" : `q_${quality}`;
+
+  // Cloudinary Upload URLs
   if (url.includes("res.cloudinary.com") && url.includes("/upload/")) {
-    return url.replace('/upload/', `/upload/w_${width},f_auto,q_auto,c_limit/`);
+    return url.replace(
+      "/upload/",
+      `/upload/w_${width},${q},f_auto,c_limit/`
+    );
   }
 
-  // Handle already Cloudinary Fetch URLs - replace params
+  // Cloudinary Fetch URLs
   if (url.includes("/image/fetch/")) {
-      return url.replace(/\/image\/fetch\/[^/]+\//, `/image/fetch/f_auto,q_auto,w_${width},c_limit/`);
+    return url.replace(
+      /\/image\/fetch\/[^/]+\//,
+      `/image/fetch/${q},f_auto,w_${width},c_limit/`
+    );
   }
 
-  // Handle Supabase URLs -> Use Cloudinary Fetch
+  // Supabase → Cloudinary Fetch
   if (url.includes("supabase.co")) {
-    // Cloudinary Fetch URL format: https://res.cloudinary.com/<cloud_name>/image/fetch/f_auto,q_auto,w_<width>/<original_url>
-    const cloudName = 'dxpabpzkf'; // Using the same cloud name as in cloudinary.ts
-    return `https://res.cloudinary.com/${cloudName}/image/fetch/f_auto,q_auto,w_${width},c_limit/${url}`;
+    const cloudName = "dxpabpzkf";
+    return `https://res.cloudinary.com/${cloudName}/image/fetch/${q},f_auto,w_${width},c_limit/${url}`;
   }
 
-  // Other URLs (external) -> Return as is or use Cloudinary fetch if desired for all external images
-  // For now, we only target Supabase images as requested.
   return url;
 };
+
 
 // Generate a tiny placeholder URL for blur-up effect
 export const getPlaceholderImage = (url: string) => {

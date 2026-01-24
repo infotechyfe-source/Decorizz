@@ -143,24 +143,7 @@ function ProductCardComponent({
 
   return (
     <div
-      className="
-    bg-white
-    curved-lg
-    shadow-premium
-    overflow-hidden 
-    w-full
-    h-full
-    block
-    flex flex-col
-    hover-lift
-    hover-glow
-    transition-all
-    duration-500
-    group
-    relative
-  "
-    >
-
+      className="bg-white curved-lg shadow-premium overflow-hidden  w-full h-full block flex flex-col hover-lift hover-glow transition-all duration-500 group relative">
       {/* Image (custom aspect) */}
       <div className={`relative w-full overflow-hidden bg-gray-100 group ${imageHeight ? '' : aspectRatio}`} style={imageHeight ? { height: imageHeight } : undefined}>
         <Link
@@ -190,7 +173,14 @@ function ProductCardComponent({
                 loading="lazy"
                 decoding="async"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="w-2/3 h-auto object-contain"
+                className=" w-full
+        h-full
+        object-contain
+        scale-105
+        transition-transform
+        duration-700
+        ease-out
+        group-hover:scale-110"
               />
             </div>
           )}

@@ -509,15 +509,15 @@ export default function AdminProducts() {
 
     const handleNeonColorImage = async (hex: string, file?: File) => {
         if (!file) return;
-         const normalizedHex = hex.toLowerCase().trim();
+        const normalizedHex = hex.toLowerCase().trim();
         const url = await uploadToCloudinary(file, accessToken);
-        console.log("Uploaded Cloudinary URL:", url); 
+        console.log("Uploaded Cloudinary URL:", url);
 
         setFormData((prev) => ({
             ...prev,
             neonImagesByColor: {
                 ...(prev.neonImagesByColor || {}),
-                 [normalizedHex]: url,
+                [normalizedHex]: url,
             },
         }));
     };
@@ -1002,6 +1002,7 @@ export default function AdminProducts() {
                                                     <option value="Canvas">Canvas</option>
                                                     <option value="Frame">Frame</option>
                                                     <option value="Neon">Neon</option>
+                                                    <option value="Acrylic">Acrylic</option>
                                                 </select>
                                             </div>
 

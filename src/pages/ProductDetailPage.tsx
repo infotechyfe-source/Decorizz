@@ -49,6 +49,10 @@ export default function ProductDetailPage() {
 
   const islighting = categoryParam === 'lighting' || (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'lighting';
 
+  const isAcrylic = categoryParam === 'acrylic' ||
+    String(product?.material || '').toLowerCase().includes('acrylic') ||
+    String(product?.layout || '').toLowerCase() === 'acrylic';
+
   const [neonOn, setNeonOn] = useState(true);
   const [neonText, setNeonText] = useState('Text');
   const [neonSize, setNeonSize] = useState<'12' | '18' | '24' | '30' | '36' | '48'>('24');
@@ -324,7 +328,6 @@ export default function ProductDetailPage() {
       }
     }
 
-
     return items;
   }, [product, selectedImage, selectedFormat, selectedColor]);
 
@@ -591,9 +594,6 @@ export default function ProductDetailPage() {
           setSelectedSize(autoSize);
           setSelectedColor(autoColor);
           setSelectedFormat(autoFormat);
-
-
-
           fetchRelatedProducts(p.category, p.id);
         }
       }
@@ -920,7 +920,6 @@ export default function ProductDetailPage() {
       ? neonImageMap[selectedColor.toLowerCase()]
       : product?.image || ""
   );
-
 
   // Loading is handled by RouteLoader - no need for individual page spinner
 
@@ -1283,9 +1282,6 @@ export default function ProductDetailPage() {
               color: '#4b5563'
             }}
           >
-
-
-
             <div
               ref={imageContainerRef}
               className="rounded-lg overflow-hidden"
@@ -1365,7 +1361,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* --- THUMBNAIL STRIP – RESPONSIVE CAROUSEL --- */}
-            {!islighting && (
+            {!islighting && !isAcrylic && (
 
               <div className="relative overflow-hidden px-2 sm:px-12">
                 {/* Left Arrow - Hidden on mobile */}
@@ -1608,7 +1604,7 @@ export default function ProductDetailPage() {
               <div>
                 <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Material</h3>
                 <div className="flex flex-wrap gap-3 rounded-lg ">
-                  {(islighting ? ['Neon Light'] : ['Canvas'] as const).map((fmt) => {
+                  {(islighting ? ['Neon Light'] : isAcrylic ? ['Acrylic'] : ['Canvas']).map((fmt) => {
                     const available = !islighting
                       ? computePriceFor(selectedSize, fmt, product.subsection) !== undefined
                       : true; // Neon Light is always available for lighting products
@@ -1660,7 +1656,7 @@ export default function ProductDetailPage() {
             )}
 
             {/* Frame Options - Hide for Neon Signs and Lighting products, show appropriate options for Circle/Custom Canvas */}
-            {!islighting && !product.categories?.some((cat: string) => cat.toLowerCase().includes('neon')) && (
+            {!islighting && !isAcrylic && !product.categories?.some((cat) => cat.toLowerCase().includes('neon')) && (
               <div className="mb-6">
                 <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Frame</h3>
                 <div className="flex flex-wrap gap-3">
@@ -1761,6 +1757,32 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             )}
+
+            {isAcrylic && (
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold mb-2 text-gray-800">
+                  Select Acrylic Finish
+                </h3>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {['Clear', 'Frosted', 'Mirror', 'Glossy'].map((type) => {
+                    const selected = selectedColor === type.toLowerCase();
+                    return (
+                      <button
+                        key={type}
+                        onClick={() => setSelectedColor(type.toLowerCase())}
+                        className={`px-4 py-2 rounded-lg border transition text-gray-700
+              ${selected ? 'border-teal-500 bg-teal text-white' : 'border-gray-300'}
+            `}
+                      >
+                        {type}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
 
             {/* Art Style - Custom Canvas Only */}
             {product.isCustomCanvas && (
