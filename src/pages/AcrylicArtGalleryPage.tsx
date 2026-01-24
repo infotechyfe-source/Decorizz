@@ -378,9 +378,12 @@ export default function AcrylicArtGalleryPage() {
                                         </span>
                                     )}
                                 </button>
-                                <p className="text-sm" style={{ color: '#6b7280' }}>
-                                    Showing <span className="font-semibold" style={{ color: '#374151' }}>{filteredProducts.length}</span> products
-                                </p>
+                                 <p style={{ fontWeight: 500, color: '#6b7280' }}>
+                                <span style={{ color: '#14b8a6', fontWeight: 700 }}>
+                                    {filteredProducts.length}
+                                </span>
+                                {" "}products found
+                            </p>
                             </div>
                             <SortDropdown value={filters.sortBy} onChange={(v) => setFilters(prev => ({ ...prev, sortBy: v }))} />
                         </div>
