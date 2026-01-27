@@ -58,7 +58,11 @@ export default function AdminProducts() {
         { name: "Purple", hex: "#9b5cff" },
         { name: "Ice", hex: "#e9f7ff" }
     ];
-
+    const ACRYLIC_LIGHTS = [
+        { key: 'nonLight', label: 'Non Light' },
+        { key: 'warmLight', label: 'Warm Light' },
+        { key: 'whiteLight', label: 'White Light' },
+    ];
 
     const [formData, setFormData] = useState({
         name: "",
@@ -79,6 +83,7 @@ export default function AdminProducts() {
         frameColor: "Black",
         imagesByColor: { White: "", Black: "", Brown: "" },
         neonImagesByColor: {} as Record<string, string>,
+        acrylicImagesByLight: {},
     });
 
     const handleExtraImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,6 +259,7 @@ export default function AdminProducts() {
                 frameColor: product.frameColor || "Black",
                 imagesByColor: (product as any).imagesByColor || { White: "", Black: "", Brown: "" },
                 neonImagesByColor: product.neon_images_by_color || {},
+                acrylicImagesByLight: product.acrylic_images_by_light || {},
             });
 
             // Load existing extra images for preview when editing
@@ -343,6 +349,7 @@ export default function AdminProducts() {
             imagesByColor: byColor,
             extraImages: finalExtraImages,
             neon_images_by_color: formData.neonImagesByColor,
+            acrylic_images_by_light: formData.acrylicImagesByLight,
         };
 
         try {
@@ -518,6 +525,24 @@ export default function AdminProducts() {
             neonImagesByColor: {
                 ...(prev.neonImagesByColor || {}),
                 [normalizedHex]: url,
+            },
+        }));
+    };
+
+    const handleAcrylicLightImage = async (
+        key: 'nonLight' | 'warmLight' | 'whiteLight',
+        file?: File
+    ) => {
+        if (!file) return;
+
+        const url = await uploadToCloudinary(file, accessToken);
+        console.log('Uploaded Acrylic Image URL:', url);
+
+        setFormData((prev) => ({
+            ...prev,
+            acrylicImagesByLight: {
+                ...(prev.acrylicImagesByLight || {}),
+                [key]: url,
             },
         }));
     };
@@ -1220,6 +1245,71 @@ export default function AdminProducts() {
                                         </div>
                                     </div>
                                 )}
+
+                                {formData.format === "Acrylic" && (
+                                    <div className="border-t pt-6 mt-6">
+                                        <h3 className="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+                                            <span className="w-1 h-6 bg-gradient-to-b from-cyan-500 to-blue-600 rounded"></span>
+                                            Acrylic Images by Light Type
+                                        </h3>
+
+                                        <p className="text-sm text-gray-500 mb-4">
+                                            Upload acrylic images for each light option
+                                        </p>
+
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                            {ACRYLIC_LIGHTS.map(({ key, label }) => (
+                                                <div key={key} className="border rounded-lg p-3">
+                                                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                                                        {label}
+                                                    </p>
+
+                                                    {formData.acrylicImagesByLight?.[key] ? (
+                                                        <div className="relative">
+                                                            <img
+                                                                src={formData.acrylicImagesByLight[key]}
+                                                                className="w-full h-32 object-cover rounded"
+                                                            />
+
+                                                            <label className="mt-2 inline-block px-3 py-1 rounded border text-sm cursor-pointer text-gray-700">
+                                                                Replace
+                                                                <input
+                                                                    type="file"
+                                                                    className="hidden"
+                                                                    accept="image/*"
+                                                                    onChange={(e) =>
+                                                                        handleAcrylicLightImage(
+                                                                            key as any,
+                                                                            e.target.files?.[0]
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                    ) : (
+                                                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded cursor-pointer bg-gray-50 hover:bg-gray-100">
+                                                            <span className="text-xs text-gray-500">
+                                                                Upload {label} image
+                                                            </span>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) =>
+                                                                    handleAcrylicLightImage(
+                                                                        key as any,
+                                                                        e.target.files?.[0]
+                                                                    )
+                                                                }
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
 
                                 {/* COLORS */}
                                 <div className="border-t pt-6">

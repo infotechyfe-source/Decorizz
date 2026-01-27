@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { ProductCard } from '../components/ProductCard';
-import { Heart, ShoppingCart, Truck, Package, Lock, CheckSquare, CircleHelp, RotateCcw, FileText, ChevronDown, CheckCircle, Star, Share2, Copy, Home, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Heart, ShoppingCart, Truck, Package, Lock, CheckSquare, CircleHelp, RotateCcw, FileText, ChevronDown, CheckCircle, Star, Share2, Copy, Home, ChevronRight, ChevronLeft, Info } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ProductReviews } from '../components/ProductReviews';
 import { AuthContext } from '../context/AuthContext';
@@ -11,6 +11,7 @@ import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { toast } from 'sonner';
 import { cartEvents } from '../utils/cartEvents';
 import { wishlistEvents } from '../utils/wishlistEvents';
+import { supabase } from '../utils/supabase/client';
 import { optimizeImage } from "../utils/optimizeImage";
 import LazyShow from "../components/LazyShow";
 import CardBoard from "../assets/7th.jpeg";
@@ -29,7 +30,20 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const { user, accessToken } = useContext(AuthContext);
   const [product, setProduct] = useState<any>(null);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [bestProducts, setBestProducts] = useState<any[]>([]);
+  const [budgetProducts, setBudgetProducts] = useState<any[]>([]);
+  const [relatedStart, setRelatedStart] = useState(0);
+  const [bestStart, setBestStart] = useState(0);
+  const [budgetStart, setBudgetStart] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
@@ -44,6 +58,11 @@ export default function ProductDetailPage() {
   const [customFile, setCustomFile] = useState<{ name: string; dataUrl: string } | null>(null);
   const [customInstructions, setCustomInstructions] = useState<string>('');
   const [selectedArtStyle, setSelectedArtStyle] = useState<string>('Fantasy Painting');
+
+  // Custom Size State
+  const [isCustomSize, setIsCustomSize] = useState(false);
+  const [customWidth, setCustomWidth] = useState(24);
+  const [customHeight, setCustomHeight] = useState(36);
 
   const isNeon = (nameParam === 'custom-name-neon-signs-lights') || String(product?.layout || '').toLowerCase() === 'neon';
 
@@ -362,14 +381,17 @@ export default function ProductDetailPage() {
     updateThumbScrollState();
   }, [selectedIndex, thumbItems.length]);
 
-  // Native wheel listener for thumbs (non-passive to allow preventDefault)
+  // Native wheel listener for thumbs - ONLY on desktop (mobile has touch scroll)
   useEffect(() => {
+    // Skip on mobile/touch devices to prevent scroll jank
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return;
+
     const el = thumbStripRef.current;
     if (!el) return;
     const handleThumbWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) {
         e.preventDefault();
-        el.scrollBy({ left: e.deltaY, behavior: 'smooth' });
+        el.scrollBy({ left: e.deltaY, behavior: 'auto' }); // Changed from 'smooth' to 'auto' for better performance
       }
     };
     el.addEventListener('wheel', handleThumbWheel, { passive: false });
@@ -414,6 +436,20 @@ export default function ProductDetailPage() {
     // For custom canvas products, don't change image on frame selection - just store the color for vendor
     if (product.isCustomCanvas) return;
 
+    // Acrylic Image Switching
+    if (isAcrylic && product.acrylicImagesByLight) {
+      let key = '';
+      if (selectedColor === 'non-light') key = 'nonLight';
+      else if (selectedColor === 'warm light') key = 'warmLight';
+      else if (selectedColor === 'white light') key = 'whiteLight';
+
+      const acrylicImg = product.acrylicImagesByLight[key];
+      if (acrylicImg && selectedImage !== acrylicImg) {
+        setSelectedImage(acrylicImg);
+        return; // Exit to prevent falling through to standard logic
+      }
+    }
+
     if (selectedFormat === 'Frame') {
       // Only use imagesByColor if available from backend
       const srcByColor = product.imagesByColor?.[selectedColor];
@@ -421,29 +457,60 @@ export default function ProductDetailPage() {
         setSelectedImage(srcByColor);
       }
     } else {
-      if (product.image && selectedImage !== product.image) {
+      // Standard flow: if we aren't in a specific mode that overrides image, default to product.image
+      // However, if we just set an acrylic image, we returned early.
+      // If we are here, it means either not acrylic OR acrylic didn't have a specific image for this selection.
+
+      // If it IS acrylic but no specific image, we might want to keep current or fallback.
+      // For now, let's fallback to product.image if not Frame.
+
+      // BUT, we need to be careful not to override user manual selection if we implement a manual override later.
+      // Current logic strictly binds image to state.
+
+      if (!isAcrylic && product.image && selectedImage !== product.image) {
+        setSelectedImage(product.image);
+      } else if (isAcrylic && product.image && selectedImage !== product.image && !product.acrylicImagesByLight?.[selectedColor === 'non-light' ? 'nonLight' : selectedColor === 'warm light' ? 'warmLight' : 'whiteLight']) {
+        // Fallback for acrylic if no specific image found?
+        // Maybe just leave it or set to main image.
+        // Let's set to main image if no match found.
         setSelectedImage(product.image);
       }
     }
-  }, [selectedFormat, selectedColor, product]);
+  }, [selectedFormat, selectedColor, product, isAcrylic]);
 
-  const fetchRelatedProducts = async (category: string, currentId?: string) => {
+  const fetchRelatedProducts = async (category: string, currentId: string) => {
     try {
-      const response = await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-52d68140/products`,
-        {
-          headers: {
-            Authorization: `Bearer ${publicAnonKey}`,
-          },
-        }
-      );
-      const data = await response.json();
-      const related = data.products
-        .filter((p: any) => p.category === category && p.id !== (currentId || id))
-        .slice(0, 4);
+      // Fetch Best Sellers, Budget Finds, and all products for Related
+      const [bestRes, budgetRes, productsRes] = await Promise.all([
+        fetch(`https://${projectId}.supabase.co/functions/v1/make-server-52d68140/home-section/best`),
+        fetch(`https://${projectId}.supabase.co/functions/v1/make-server-52d68140/home-section/budget`),
+        fetch(`https://${projectId}.supabase.co/functions/v1/make-server-52d68140/products`, {
+          headers: { Authorization: `Bearer ${publicAnonKey}` }
+        })
+      ]);
+
+      const bestData = await bestRes.json();
+      setBestProducts(bestData.products || []);
+
+      const budgetData = await budgetRes.json();
+      setBudgetProducts(budgetData.products || []);
+
+      // Filter related products from the all products list
+      const productsData = await productsRes.json();
+      const allProducts = productsData.products || [];
+      const related = allProducts
+        .filter((p: any) => {
+          // Match by category and exclude current product
+          const matchesCategory = category ? p.category === category : true;
+          const isNotCurrent = p.id !== currentId;
+          return matchesCategory && isNotCurrent;
+        })
+        .slice(0, 12);
+
       setRelatedProducts(related);
+
     } catch (error) {
-      console.error('Fetch related products error:', error);
+      console.error('Error fetching additional products:', error);
     }
   };
 
@@ -578,8 +645,21 @@ export default function ProductDetailPage() {
           const p = data.product;
 
           const effectiveSizes = p.layout?.toLowerCase() === 'landscape' ? ['36X18', '48X24', '20X30', '30X40'] : p.sizes || [];
-          const autoSize = effectiveSizes.length > 0 ? effectiveSizes[0] : "";
-          const autoColor = p.colors?.[0] || "";
+          let autoSize = effectiveSizes.length > 0 ? effectiveSizes[0] : "";
+          let autoColor = p.colors?.[0] || "";
+
+          const isAcrylicProduct = categoryParam === 'acrylic' ||
+            String(p.material || '').toLowerCase().includes('acrylic') ||
+            String(p.layout || '').toLowerCase() === 'acrylic';
+
+          if (isAcrylicProduct) {
+            const layout = (p.layout || '').toLowerCase();
+            const isSquare = layout === 'square' || layout === 'circle';
+            // Default to the first size in our predetermined list
+            autoSize = isSquare ? '12X12' : '12X15';
+            autoColor = 'non-light';
+          }
+
           const autoFormat = p.format || "Rolled";
 
           setProduct({
@@ -594,7 +674,7 @@ export default function ProductDetailPage() {
           setSelectedSize(autoSize);
           setSelectedColor(autoColor);
           setSelectedFormat(autoFormat);
-          fetchRelatedProducts(p.category, p.id);
+          fetchRelatedProducts(p.category || '', p.id || '');
         }
       }
     } catch (error) {
@@ -674,6 +754,20 @@ export default function ProductDetailPage() {
     '48X66': { Rolled: 17699, Canvas: 28299, Frame: null },
   };
 
+  const ACRYLIC_RECT_PRICES: Record<string, { 'non-light': number; 'warm light': number; 'white light': number }> = {
+    '12X15': { 'non-light': 1599, 'warm light': 2699, 'white light': 2699 },
+    '15X18': { 'non-light': 2699, 'warm light': 3799, 'white light': 3799 },
+    '20X24': { 'non-light': 3699, 'warm light': 4799, 'white light': 4799 },
+    '24X28': { 'non-light': 5599, 'warm light': 6699, 'white light': 6699 },
+  };
+
+  const ACRYLIC_SQUARE_PRICES: Record<string, { 'non-light': number; 'warm light': number; 'white light': number }> = {
+    '12X12': { 'non-light': 1299, 'warm light': 2399, 'white light': 2399 },
+    '18X18': { 'non-light': 2899, 'warm light': 3999, 'white light': 3999 },
+    '24X24': { 'non-light': 3899, 'warm light': 4999, 'white light': 4999 },
+    '30X30': { 'non-light': 5899, 'warm light': 6999, 'white light': 6999 },
+  };
+
   const computePriceFor = (
     size: string,
     format: 'Rolled' | 'Canvas' | 'Frame',
@@ -687,13 +781,27 @@ export default function ProductDetailPage() {
     return value === null ? undefined : value ?? undefined;
   };
 
+  const calculateCustomPrice = (w: number, h: number, fmt: 'Rolled' | 'Canvas' | 'Frame') => {
+    const area = w * h;
+    // Approximate formula based on standard sizes
+    const rolled = 500 + (1.8 * area);
+    const canvas = rolled + (1.2 * area);
+    const frame = canvas + (0.4 * area) + 150;
+
+    let final = rolled;
+    if (fmt === 'Canvas') final = canvas;
+    if (fmt === 'Frame') final = frame;
+
+    return Math.round(final / 10) * 10; // Round to nearest 10
+  };
+
   const handleAddToCart = async () => {
     if (!user) {
       toast.error('Please login to add to cart');
       return;
     }
 
-    if (!isNeon && !selectedSize) {
+    if (!isNeon && !selectedSize && !isCustomSize) {
       toast.error('Please select size');
       return;
     }
@@ -709,7 +817,10 @@ export default function ProductDetailPage() {
 
     setIsAddingToCart(true);
     try {
-      const overridePrice = isNeon ? NEON_PRICE[neonSize] : (computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price);
+      let overridePrice = isNeon ? NEON_PRICE[neonSize] : (computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price);
+      if (!isNeon && isCustomSize) {
+        overridePrice = calculateCustomPrice(customWidth, customHeight, selectedFormat);
+      }
       const previewURL = isNeon ? await generateNeonPreview() : (product?.image || '');
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-52d68140/cart`,
@@ -722,7 +833,7 @@ export default function ProductDetailPage() {
           body: JSON.stringify({
             productId: product?.id || id,
             quantity,
-            size: isNeon ? `${neonSize}in` : selectedSize,
+            size: isNeon ? `${neonSize}in` : (isCustomSize ? `${customWidth}X${customHeight}` : selectedSize),
             color: selectedFormat === 'Frame' ? selectedColor : undefined,
             format: selectedFormat,
             frameColor: selectedFormat === 'Frame' ? selectedColor : undefined,
@@ -758,7 +869,7 @@ export default function ProductDetailPage() {
       return;
     }
 
-    if (!isNeon && !selectedSize) {
+    if (!isNeon && !selectedSize && !isCustomSize) {
       toast.error('Please select size');
       return;
     }
@@ -773,7 +884,10 @@ export default function ProductDetailPage() {
     }
 
     try {
-      const overridePrice = isNeon ? NEON_PRICE[neonSize] : (computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price);
+      let overridePrice = isNeon ? NEON_PRICE[neonSize] : (computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price);
+      if (!isNeon && isCustomSize) {
+        overridePrice = calculateCustomPrice(customWidth, customHeight, selectedFormat);
+      }
       const previewURL = isNeon ? await generateNeonPreview() : (product?.image || '');
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-52d68140/cart`,
@@ -786,7 +900,7 @@ export default function ProductDetailPage() {
           body: JSON.stringify({
             productId: product?.id || id,
             quantity,
-            size: isNeon ? `${neonSize}in` : selectedSize,
+            size: isNeon ? `${neonSize}in` : (isCustomSize ? `${customWidth}X${customHeight}` : selectedSize),
             color: selectedFormat === 'Frame' ? selectedColor : undefined,
             format: selectedFormat,
             frameColor: selectedFormat === 'Frame' ? selectedColor : undefined,
@@ -881,8 +995,35 @@ export default function ProductDetailPage() {
 
   const price = useMemo(() => {
     if (!product) return 0;
+
+    if (isAcrylic) {
+      if (!selectedSize) return product.price || 0;
+
+      const sizeKey = normalizeSize(selectedSize);
+      const colorKey = (selectedColor || 'non-light').toLowerCase();
+
+      // Determine which table to use based on layout
+      const layout = product.layout?.toLowerCase();
+      const isSquareFn = layout === 'square' || layout === 'circle';
+      const table = isSquareFn ? ACRYLIC_SQUARE_PRICES : ACRYLIC_RECT_PRICES;
+
+      const priceEntry = table[sizeKey];
+      if (priceEntry) {
+        // Map the selected color to the price key
+        // We use 'non-light', 'warm light', 'white light' as keys in our data
+        // User selection might vary slightly so we ensure matching
+        if (colorKey.includes('warm')) return priceEntry['warm light'];
+        if (colorKey.includes('white')) return priceEntry['white light'];
+        return priceEntry['non-light'];
+      }
+      return product.price || 0;
+    }
+
+    if (isCustomSize) {
+      return calculateCustomPrice(customWidth, customHeight, selectedFormat);
+    }
     return computePriceFor(selectedSize, selectedFormat, product.subsection) ?? product.price;
-  }, [selectedSize, selectedFormat, product]);
+  }, [selectedSize, selectedFormat, product, isCustomSize, customWidth, customHeight, isAcrylic, selectedColor]);
 
   const neonImageMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -898,7 +1039,22 @@ export default function ProductDetailPage() {
 
   // Update image when color changes for lighting products
   useEffect(() => {
+
     if (!islighting || !selectedColor || !product?.neon_images_by_color) return;
+
+    // Color name to hex mapping for fallback
+    const colorHexMap: Record<string, string> = {
+      white: '#ffffff',
+      pink: '#ff007f',
+      green: '#00ff00',
+      cyan: '#00ffff',
+      blue: '#0000ff',
+      yellow: '#ffff00',
+      orange: '#ff8000',
+      red: '#ff0000',
+      purple: '#a855f7',
+      lime: '#d4ff00',
+    };
 
     // Normalize keys for lookup
     const normalizedMap: Record<string, string> = {};
@@ -906,9 +1062,18 @@ export default function ProductDetailPage() {
       normalizedMap[k.toLowerCase().trim()] = v as string;
     });
 
-    const neonImg = normalizedMap[selectedColor.toLowerCase().trim()];
+    const colorKey = selectedColor.toLowerCase().trim();
+    // Try color name first, then hex code
+    let neonImg = normalizedMap[colorKey];
+    if (!neonImg && colorHexMap[colorKey]) {
+      neonImg = normalizedMap[colorHexMap[colorKey].toLowerCase()];
+    }
+
     if (neonImg) {
       setSelectedImage(neonImg);
+    } else {
+      // Clear selected image if no match found so activeImage falls back to default
+      setSelectedImage(null);
     }
   }, [selectedColor, islighting, product]);
 
@@ -999,28 +1164,34 @@ export default function ProductDetailPage() {
       Sacramento: '"Sacramento", cursive',
     };
     const swatches = ['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9v5cff', '#faf9f6'];
-    const fontsMeta = [
-      { label: 'Signature', family: '"Great Vibes", cursive' },
-      { label: 'Barcelona', family: '"Pacifico", cursive' },
-      { label: 'Sorrento', family: '"Lobster", cursive' },
-      { label: 'MONACO', family: '"Bebas Neue", sans-serif', uppercase: true },
-      { label: 'Melbourne', family: '"Montserrat", sans-serif' },
-      { label: 'NeoTokyo', family: '"Poppins", sans-serif' },
-      { label: 'NEON', family: '"Bebas Neue", sans-serif', uppercase: true, letterSpacing: '0.12em' },
-      { label: 'WAIKIKI', family: '"Montserrat", sans-serif', uppercase: true, letterSpacing: '0.08em' },
-      { label: 'Typewriter', family: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' },
-      { label: 'NEONTRACE', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
-      { label: 'NeonGlow', family: '"Montserrat", sans-serif' },
-      { label: 'LOVENEON', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
-      { label: 'OUTLINE', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
-      { label: 'Beachfront', family: '"Sacramento", cursive' },
-      { label: 'Vintage', family: '"Playfair Display", serif' },
-      { label: 'Brighter', family: '"Dancing Script", cursive' },
-      { label: 'Capetown', family: '"Kaushan Script", cursive' },
-      { label: 'Demetors', family: '"Caveat", cursive' },
-      { label: 'Paul Grotesk', family: '"Montserrat", sans-serif' },
-      { label: 'Retroslogy', family: '"Lobster", cursive' },
-    ] as const;
+    const fontsMeta: Array<{
+      label: string;
+      family: string;
+      uppercase?: boolean;
+      letterSpacing?: string;
+      outline?: boolean;
+    }> = [
+        { label: 'Signature', family: '"Great Vibes", cursive' },
+        { label: 'Barcelona', family: '"Pacifico", cursive' },
+        { label: 'Sorrento', family: '"Lobster", cursive' },
+        { label: 'MONACO', family: '"Bebas Neue", sans-serif', uppercase: true },
+        { label: 'Melbourne', family: '"Montserrat", sans-serif' },
+        { label: 'NeoTokyo', family: '"Poppins", sans-serif' },
+        { label: 'NEON', family: '"Bebas Neue", sans-serif', uppercase: true, letterSpacing: '0.12em' },
+        { label: 'WAIKIKI', family: '"Montserrat", sans-serif', uppercase: true, letterSpacing: '0.08em' },
+        { label: 'Typewriter', family: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' },
+        { label: 'NEONTRACE', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
+        { label: 'NeonGlow', family: '"Montserrat", sans-serif' },
+        { label: 'LOVENEON', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
+        { label: 'OUTLINE', family: '"Bebas Neue", sans-serif', uppercase: true, outline: true },
+        { label: 'Beachfront', family: '"Sacramento", cursive' },
+        { label: 'Vintage', family: '"Playfair Display", serif' },
+        { label: 'Brighter', family: '"Dancing Script", cursive' },
+        { label: 'Capetown', family: '"Kaushan Script", cursive' },
+        { label: 'Demetors', family: '"Caveat", cursive' },
+        { label: 'Paul Grotesk', family: '"Montserrat", sans-serif' },
+        { label: 'Retroslogy', family: '"Lobster", cursive' },
+      ];
     const original = Math.round(neonPrice * 1.05);
     const widthInches = parseInt(neonSize, 10);
     const heightInches = Math.max(6, Math.round(widthInches * 0.3));
@@ -1360,15 +1531,154 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
+            {/* --- MOVED LEFT COLUMN CONTROLS --- */}
+            <div className="mt-4 px-2 sm:px-12">
+              {/* Sizes */}
+              {product.sizes?.length > 0 && (
+                <div className="mb-4">
+
+
+                  {/* Custom Size Toggle/Input */}
+                  {product.isCustomCanvas && (
+                    <div className="w-full mt-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <button
+                          onClick={() => { setIsCustomSize(!isCustomSize); if (!isCustomSize) setSelectedSize(''); }}
+                          className={`px-4 py-1 rounded-lg border-2 text-sm font-medium transition ${isCustomSize ? 'border-teal-500 bg-teal text-white' : 'border-gray-200 text-gray-700 hover:border-gray-300'}`}
+                        >
+                          Custom Size
+                        </button>
+                      </div>
+
+                      {isCustomSize && (
+                        <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <h4 className="text-sm font-semibold text-gray-700 mb-3">Enter Dimensions (Inches)</h4>
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 mb-1 block">Width (8-48")</label>
+                              <div className="relative">
+                                <select
+                                  value={customWidth}
+                                  onChange={(e) => setCustomWidth(Number(e.target.value))}
+                                  className="appearance-none w-24 px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                                >
+                                  {Array.from({ length: 41 }, (_, i) => i + 8).map(n => (
+                                    <option key={n} value={n}>{n}"</option>
+                                  ))}
+                                </select>
+                                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                              </div>
+                            </div>
+                            <span className="text-gray-300 mt-5">✕</span>
+                            <div>
+                              <label className="text-xs font-medium text-gray-500 mb-1 block">Height (12-64")</label>
+                              <div className="relative">
+                                <select
+                                  value={customHeight}
+                                  onChange={(e) => setCustomHeight(Number(e.target.value))}
+                                  className="appearance-none w-24 px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                                >
+                                  {Array.from({ length: 53 }, (_, i) => i + 12).map(n => (
+                                    <option key={n} value={n}>{n}"</option>
+                                  ))}
+                                </select>
+                                <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-3 pt-3 border-t border-gray-100 flex items-center gap-1">
+                            <Info className="w-3 h-3" />
+                            Custom sizes are made to order
+                          </p>
+                          {/* Estimate Price for Custom Size */}
+                          {isCustomSize && (
+                            <div className="mt-3 text-sm font-semibold text-teal-600">
+                              Est. Price: ₹{calculateCustomPrice(customWidth, customHeight, 'Rolled')}
+                              {product.comparePrice && <span className="text-gray-400 line-through text-xs ml-2">₹{Math.round(calculateCustomPrice(customWidth, customHeight, 'Rolled') * 1.5)}</span>}
+                            </div>
+                          )}
+                          <button
+                            onClick={() => {
+                              // Logic to confirm custom size if needed, or just proceed
+                              setSelectedSize(`Custom: ${customWidth}x${customHeight}`);
+                            }}
+                            className="mt-3 w-full py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700"
+                          >
+                            Confirm Dimensions
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {isAcrylic && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold mb-2 text-gray-800">
+                    Select Acrylic Finish
+                  </h3>
+
+                  <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                    {['Non-Light', 'Warm Light', 'White Light'].map((type) => {
+                      const selected = selectedColor === type.toLowerCase();
+                      return (
+                        <button
+                          key={type}
+                          onClick={() => setSelectedColor(type.toLowerCase())}
+                          className={`px-4 py-2 rounded-lg border transition text-gray-700
+              ${selected ? 'border-teal-500 bg-teal text-white' : 'border-gray-300'}
+            `}
+                        >
+                          {type}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Lighting Color Selection - Left Column */}
+              {islighting && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold mb-2 text-gray-800">
+                    Select Light Colour
+                  </h3>
+
+                  <div className="flex flex-wrap gap-2">
+                    {['#ffffff', '#FF2ec4', '#39ff14', '#00e5ff', '#1e4bff', '#fff700', '#ff9f00', '#ff1a1a', '#9b5cff', '#faf9f6'].map((hex) => {
+                      const isSelected = selectedColor?.toLowerCase() === hex.toLowerCase();
+                      return (
+                        <button
+                          key={hex}
+                          onClick={() => setSelectedColor(hex.toLowerCase())}
+                          className="w-10 h-10 rounded-xl border-2 transition-transform hover:scale-110"
+                          style={{
+                            backgroundColor: hex,
+                            borderColor: isSelected ? '#14b8a6' : '#e5e7eb',
+                            boxShadow: isSelected ? `0 0 12px ${hex}` : 'none',
+                          }}
+                          title={hex}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* --- THUMBNAIL STRIP – RESPONSIVE CAROUSEL --- */}
             {!islighting && !isAcrylic && (
 
               <div className="relative overflow-hidden px-2 sm:px-12">
                 {/* Left Arrow - Hidden on mobile */}
                 <button
-                  onClick={() => handleArrow("left")}
-                  className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
-                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
+                  onClick={() => scrollThumbs("left")}
+                  disabled={!canScrollLeft}
+                  className={`hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border transition-all items-center justify-center shadow-md
+                    ${!canScrollLeft ? 'opacity-0 pointer-events-none' : 'opacity-100 hover:bg-gray-50 hover:scale-110'}
+                  `}
+                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.95)", color: "#1f2937" }}
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -1390,8 +1700,8 @@ export default function ProductDetailPage() {
                     {optimizedThumbItems.map((item, index) => (
                       <div
                         key={index}
-                        className={`thumb-item w-12 h-12 sm:w-20 sm:h-20 rounded-md sm:rounded-lg border-2 cursor-pointer overflow-hidden shrink-0 transition-all duration-300
-            ${item.selected ? "border-teal-600 shadow-lg scale-105 sm:scale-110 ring-2 ring-teal-600" : "border-gray-300 opacity-70 hover:opacity-100 active:opacity-100"}`}
+                        className={`thumb-item w-12 h-14 sm:w-20 sm:h-20 rounded-xl border-2 cursor-pointer overflow-hidden shrink-0 transition-all duration-300
+            ${item.selected ? "border-teal-600 shadow-lg scale-105 sm:scale-100 ring-2 ring-teal-600" : "border-gray-200 opacity-70 hover:opacity-100 hover:border-teal-400"}`}
                         onClick={() => selectByIndex(index)}
                         onContextMenu={(e) => e.preventDefault()}
                       >
@@ -1408,15 +1718,66 @@ export default function ProductDetailPage() {
 
                 {/* Right Arrow - Hidden on mobile */}
                 <button
-                  onClick={() => handleArrow("right")}
-                  className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border hover:bg-gray-100 transition-colors items-center justify-center"
-                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.9)", color: "#1f2937" }}
+                  onClick={() => scrollThumbs("right")}
+                  disabled={!canScrollRight}
+                  className={`hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 p-2 rounded-full border transition-all items-center justify-center shadow-md
+                    ${!canScrollRight ? 'opacity-0 pointer-events-none' : 'opacity-100 hover:bg-gray-50 hover:scale-110'}
+                  `}
+                  style={{ borderColor: "#e5e7eb", backgroundColor: "rgba(255,255,255,0.95)", color: "#1f2937" }}
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
             )}
 
+            {/* Frame Options - Left Column (after thumbnails) */}
+            {!islighting && !isAcrylic && !product.categories?.some((cat) => cat.toLowerCase().includes('neon')) && (
+              <div className="mt-4 px-2 sm:px-12">
+                <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Frame</h3>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { label: 'Without Frame (Rolled)', fmt: 'Rolled' as const, color: '' },
+                    { label: 'Stretched Canvas', fmt: 'Canvas' as const, color: '' },
+                    { label: 'Black Frame', fmt: 'Frame' as const, color: 'Black' },
+                    { label: 'White Frame', fmt: 'Frame' as const, color: 'White' },
+                    { label: 'Dark Wood Frame', fmt: 'Frame' as const, color: 'Brown' },
+                  ]
+                    .filter(opt => {
+                      // For circle/round canvas, only show Rolled and Canvas options
+                      if (product.layout?.toLowerCase() === 'circle') {
+                        return opt.fmt === 'Rolled' || opt.fmt === 'Canvas';
+                      }
+                      return true;
+                    })
+                    .map((opt) => {
+                      const available = product.isCustomCanvas || computePriceFor(selectedSize, opt.fmt, product.subsection) !== undefined;
+                      const isActive =
+                        selectedFormat === opt.fmt &&
+                        (opt.fmt !== 'Frame' || selectedColor === opt.color || !opt.color);
+                      return (
+                        <button
+                          key={opt.label}
+                          onClick={() => {
+                            if (!available) return;
+                            setSelectedFormat(opt.fmt);
+                            if (opt.fmt === 'Frame') {
+                              setSelectedColor(opt.color);
+                            } else {
+                              setSelectedColor('');
+                            }
+                          }}
+                          className={`px-4 py-1 rounded-lg border-2 transition cursor-pointer ${isActive ? 'border-teal-500 bg-teal text-white' : ''
+                            } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
+                          style={{ borderColor: isActive ? undefined : '#d1d5db', color: isActive ? undefined : '#374151' }}
+                          disabled={!available}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
             {/* Quick Specs to avoid empty space on left */}
             {/* {!product.isCustomCanvas && (
               <div className="hidden lg:block mt-4 rounded-2xl p-4 soft-card" style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}>
@@ -1606,12 +1967,12 @@ export default function ProductDetailPage() {
                 <div className="flex flex-wrap gap-3 rounded-lg ">
                   {(islighting ? ['Neon Light'] : isAcrylic ? ['Acrylic'] : ['Canvas']).map((fmt) => {
                     const available = !islighting
-                      ? computePriceFor(selectedSize, fmt, product.subsection) !== undefined
+                      ? computePriceFor(selectedSize, fmt as 'Rolled' | 'Canvas' | 'Frame', product.subsection) !== undefined
                       : true; // Neon Light is always available for lighting products
                     return (
                       <button
                         key={fmt}
-                        onClick={() => available && setSelectedFormat(fmt)}
+                        onClick={() => available && setSelectedFormat(fmt as 'Rolled' | 'Canvas' | 'Frame')}
                         className={`px-4 py-1 rounded-lg border-2 transition ${selectedFormat === fmt ? 'border-teal-500 bg-teal text-white cursor-pointer' : ''
                           } ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
                         style={{
@@ -1637,11 +1998,18 @@ export default function ProductDetailPage() {
                 <div className="flex flex-wrap gap-3">
                   {(product.layout?.toLowerCase() === 'landscape'
                     ? ['36X18', '48X24', '20X30', '30X40']
-                    : product.sizes
+                    : isAcrylic
+                      ? ((product.layout?.toLowerCase() === 'square' || product.layout?.toLowerCase() === 'circle')
+                        ? ['12X12', '18X18', '24X24', '30X30']
+                        : ['12X15', '15X18', '20X24', '24X28'])
+                      : product.sizes
                   ).map((size: string) => (
                     <button
                       key={size}
-                      onClick={() => setSelectedSize(size)}
+                      onClick={() => {
+                        setSelectedSize(size);
+                        setIsCustomSize(false);
+                      }}
                       className={`px-4 py-1 rounded-lg border-2 cursor-pointer transition ${selectedSize === size
                         ? 'border-teal-500 bg-teal text-white'
                         : ''
@@ -1652,11 +2020,68 @@ export default function ProductDetailPage() {
                     </button>
                   ))}
                 </div>
+
+                {/* Custom Size Toggle/Input */}
+                {product.isCustomCanvas && (
+                  <div className="w-full mt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <button
+                        onClick={() => { setIsCustomSize(!isCustomSize); if (!isCustomSize) setSelectedSize(''); }}
+                        className={`px-4 py-1 rounded-lg border-2 text-sm font-medium transition ${isCustomSize ? 'border-teal-500 bg-teal text-white' : 'border-gray-200 text-gray-700 hover:border-gray-300'}`}
+                      >
+                        Custom Size
+                      </button>
+                    </div>
+
+                    {isCustomSize && (
+                      <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <h4 className="text-sm font-semibold text-gray-700 mb-3">Enter Dimensions (Inches)</h4>
+                        <div className="flex items-center gap-4">
+                          <div>
+                            <label className="text-xs font-medium text-gray-500 mb-1 block">Width (8-48")</label>
+                            <div className="relative">
+                              <select
+                                value={customWidth}
+                                onChange={(e) => setCustomWidth(Number(e.target.value))}
+                                className="appearance-none w-24 px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                              >
+                                {Array.from({ length: 41 }, (_, i) => i + 8).map(n => (
+                                  <option key={n} value={n}>{n}"</option>
+                                ))}
+                              </select>
+                              <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
+                          </div>
+                          <span className="text-gray-300 mt-5">✕</span>
+                          <div>
+                            <label className="text-xs font-medium text-gray-500 mb-1 block">Height (12-64")</label>
+                            <div className="relative">
+                              <select
+                                value={customHeight}
+                                onChange={(e) => setCustomHeight(Number(e.target.value))}
+                                className="appearance-none w-24 px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"
+                              >
+                                {Array.from({ length: 53 }, (_, i) => i + 12).map(n => (
+                                  <option key={n} value={n}>{n}"</option>
+                                ))}
+                              </select>
+                              <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-3">
+                          Price updates automatically based on size and finish.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
               </div>
             )}
 
-            {/* Frame Options - Hide for Neon Signs and Lighting products, show appropriate options for Circle/Custom Canvas */}
-            {!islighting && !isAcrylic && !product.categories?.some((cat) => cat.toLowerCase().includes('neon')) && (
+            {/* Frame Options - MOVED TO LEFT COLUMN */}
+            {/* {!islighting && !isAcrylic && !product.categories?.some((cat) => cat.toLowerCase().includes('neon')) && (
               <div className="mb-6">
                 <h3 className="font-semibold mb-2" style={{ color: '#1f2937' }}>Frame</h3>
                 <div className="flex flex-wrap gap-3">
@@ -1702,10 +2127,10 @@ export default function ProductDetailPage() {
                     })}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Lighting Color Selector - Rounded LG */}
-            {islighting && (
+            {/* {islighting && (
               <div className="mb-4">
                 <h3 className="text-sm font-semibold mb-2 text-gray-800">
                   Select Light Colour
@@ -1756,9 +2181,9 @@ export default function ProductDetailPage() {
                   })}
                 </div>
               </div>
-            )}
+            )} */}
 
-            {isAcrylic && (
+            {/* {isAcrylic && (
               <div className="mb-4">
                 <h3 className="text-sm font-semibold mb-2 text-gray-800">
                   Select Acrylic Finish
@@ -1781,7 +2206,7 @@ export default function ProductDetailPage() {
                   })}
                 </div>
               </div>
-            )}
+            )} */}
 
 
             {/* Art Style - Custom Canvas Only */}
@@ -1966,7 +2391,7 @@ export default function ProductDetailPage() {
         </div>
 
      
-        <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white/90 backdrop-blur border-t border-gray-200 p-3 z-40">
+        <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-gray-200 p-3 z-40" style={{ willChange: 'transform' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total</p>
@@ -1978,54 +2403,189 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-
-      </div>
             )} */}
           </div>
 
         </div>
 
-        {/* Reviews Section */}
 
         {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-6 rounded-2xl p-6" style={{
-            background: "linear-gradient(135deg, #f5f2e9 0%)",
-            backdropFilter: "blur(2px)",
-          }}>
-            <h2 className="custom-heading font-bold text-center mb-12">
-              Related <span style={{ color: "#14b8a6" }}>Frames</span>
-            </h2>
+        {relatedProducts.length > 0 && (() => {
+          const visibleRelated = relatedProducts.slice(relatedStart, relatedStart + 4).concat(
+            relatedStart + 4 > relatedProducts.length ? relatedProducts.slice(0, (relatedStart + 4) % relatedProducts.length) : []
+          ).slice(0, 4);
+          return (
+            <div className="mt-6 rounded-2xl p-6" style={{
+              background: "linear-gradient(135deg, #f5f2e9 0%)",
+              backdropFilter: "blur(2px)",
+            }}>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="custom-heading font-bold">
+                  Related <span style={{ color: "#14b8a6" }}>Frames</span>
+                </h2>
+                {!isMobile && relatedProducts.length > 4 && (
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setRelatedStart(s => { const len = relatedProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                    <button onClick={() => setRelatedStart(s => { const len = relatedProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+                  </div>
+                )}
+              </div>
 
-
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((product) => {
-                let overridePrice = undefined;
-                if (product.layout?.toLowerCase() === 'landscape') {
-                  // Default to 36X18 price (2999) for Landscape related cards
-                  overridePrice = computePriceFor('36X18', 'Rolled', product.subsection);
-                }
-
-                return (
-                  <LazyShow key={product.id}>
-                    <ProductCard product={product} overridePrice={overridePrice} />
-                  </LazyShow>
-                );
-              })}
+              {isMobile ? (
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y' }}>
+                  {relatedProducts.map((product) => {
+                    let overridePrice = undefined;
+                    if (product.layout?.toLowerCase() === 'landscape') {
+                      overridePrice = computePriceFor('36X18', 'Rolled', product.subsection);
+                    }
+                    return (
+                      <Link key={product.id} to={`/product/${(product.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(product.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 200 }}>
+                        <div className="w-full h-48 bg-gray-100">
+                          <ImageWithFallback src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="p-3">
+                          <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-400 line-through">₹{Math.round((overridePrice || product.price || 0) * 1.15).toLocaleString('en-IN')}</span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              ₹{(overridePrice || product.price || 0).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {visibleRelated.map((product) => {
+                    let overridePrice = undefined;
+                    if (product.layout?.toLowerCase() === 'landscape') {
+                      overridePrice = computePriceFor('36X18', 'Rolled', product.subsection);
+                    }
+                    return (
+                      <LazyShow key={product.id}>
+                        <ProductCard product={product} overridePrice={overridePrice} />
+                      </LazyShow>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
+          );
+        })()}
 
-        )}
+        {/* Best Sellers Section */}
+        {bestProducts.length > 0 && (() => {
+          const visibleBest = bestProducts.slice(bestStart, bestStart + 4).concat(
+            bestStart + 4 > bestProducts.length ? bestProducts.slice(0, (bestStart + 4) % bestProducts.length) : []
+          ).slice(0, 4);
+          return (
+            <div className="mt-8 rounded-2xl p-6" style={{ backgroundColor: '#faf7f4', paddingTop: product?.isCustomCanvas && !isMobile ? '550px' : undefined }}>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="section-title-themed font-extrabold inline-block">
+                  <span className="text-brand">Best</span>
+                  <span className="text-accent"> Sellers</span>
+                </h2>
+                {!isMobile && bestProducts.length > 4 && (
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                    <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+                  </div>
+                )}
+              </div>
 
-        <div className="max-w-7xl mx-auto px-4 md:px-8 pt-6">
-          <ProductReviews productId={product?.id || id || ''} />
-        </div>
+              {isMobile ? (
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y' }}>
+                  {bestProducts.map((p) => (
+                    <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 200 }}>
+                      <div className="w-full h-48 bg-gray-100">
+                        <ImageWithFallback src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-3">
+                        <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{p.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-400 line-through">₹{Math.round((p.price || 0) * 1.15).toLocaleString('en-IN')}</span>
+                          <span className="text-sm font-semibold text-gray-900">₹{(p.price || 0).toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {visibleBest.map((p) => (
+                    <ProductCard key={p.id} product={p} hideCategory imageHeight={240} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}\n
+
+        {/* Budget Finds Section */}
+        {budgetProducts.length > 0 && (() => {
+          const visibleBudget = budgetProducts.slice(budgetStart, budgetStart + 4).concat(
+            budgetStart + 4 > budgetProducts.length ? budgetProducts.slice(0, (budgetStart + 4) % budgetProducts.length) : []
+          ).slice(0, 4);
+          return (
+            <div className="mt-8 rounded-2xl p-6" style={{ backgroundColor: '#f1f5f9' }}>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="section-title-themed font-extrabold inline-block">
+                  <span className="text-brand">Budget</span>
+                  <span className="text-accent"> Finds</span>
+                </h2>
+                {!isMobile && budgetProducts.length > 4 && (
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setBudgetStart(s => { const len = budgetProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                    <button onClick={() => setBudgetStart(s => { const len = budgetProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+                  </div>
+                )}
+              </div>
+
+              {isMobile ? (
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y' }}>
+                  {budgetProducts.map((p) => (
+                    <Link key={p.id} to={`/product/${(p.category || 'all').toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${(p.name || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="shrink-0 bg-white rounded-xl shadow-md overflow-hidden" style={{ width: 200 }}>
+                      <div className="w-full h-48 bg-gray-100">
+                        <ImageWithFallback src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-3">
+                        <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1">{p.name}</h3>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-400 line-through">₹{Math.round((p.price || 0) * 1.15).toLocaleString('en-IN')}</span>
+                          <span className="text-sm font-semibold text-gray-900">₹{(p.price || 0).toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {visibleBudget.map((p) => (
+                    <ProductCard key={p.id} product={p} hideCategory imageHeight={240} />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+
+
       </div>
 
       {/* Floating Product Video */}
-      {(product?.id || id) && (
-        <FloatingProductVideo productId={product?.id || id || ''} />
-      )}
+      {
+        (product?.id || id) && (
+          <FloatingProductVideo productId={product?.id || id || ''} />
+        )
+      }
+      {/* Reviews Section */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8 pt-6">
+        <ProductReviews productId={product?.id || id || ''} />
+      </div>
+
       <Footer />
     </div >
   );

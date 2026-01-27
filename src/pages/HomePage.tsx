@@ -302,7 +302,7 @@ export default function HomePage() {
     .slice(0, 2)
     .map((p) => optimizeImage(p.image, 3000, 100));
 
-  const heroImagesMobile = (newProducts.length ? newProducts : featuredProducts).slice(5, 7).map((p) => optimizeImage(p.image, 800,100));
+  const heroImagesMobile = (newProducts.length ? newProducts : featuredProducts).slice(5, 7).map((p) => optimizeImage(p.image, 800, 100));
 
   const heroImages = viewportW < 768 ? heroImagesMobile : heroImagesDesktop;
 
@@ -554,19 +554,17 @@ export default function HomePage() {
       {/* Best Sellers Section */}
       <section className="section-collections relative" aria-label="Best Sellers" style={{ backgroundColor: '#faf7f4' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
-          <div className="section-header text-center mb-6">
-            <h2 className="section-title-themed font-extrabold mb-3 inline-block">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="section-title-themed font-extrabold inline-block">
               <span className="text-brand">Best</span>
               <span className="text-accent"> Sellers</span>
             </h2>
-            <div className="flex items-center justify-between">
-              {!isMobile && (
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
-                </div>
-              )}
-            </div>
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + len - 1) % len; })} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                <button onClick={() => setBestStart(s => { const len = bestProducts.length || 1; return (s + 1) % len; })} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+              </div>
+            )}
           </div>
           {isMobile ? (
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
@@ -654,19 +652,17 @@ export default function HomePage() {
       {/* Premium Collection */}
       <section className="section-collections relative" aria-label="Premium Collection" style={{ backgroundColor: '#fef3c7' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
-          <div className="section-header text-center mb-6">
-            <h2 className="section-title-themed font-extrabold mb-3 inline-block">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="section-title-themed font-extrabold inline-block">
               <span className="text-brand">Premium</span>
               <span className="text-accent"> Collection</span>
             </h2>
-            <div className="flex items-center justify-between">
-              {!isMobile && (
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setPremiumStart(s => (s + (premiumProducts.length || 1) - 1) % (premiumProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setPremiumStart(s => (s + 1) % (premiumProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
-                </div>
-              )}
-            </div>
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setPremiumStart(s => (s + (premiumProducts.length || 1) - 1) % (premiumProducts.length || 1))} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                <button onClick={() => setPremiumStart(s => (s + 1) % (premiumProducts.length || 1))} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+              </div>
+            )}
           </div>
           {isMobile ? (
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
@@ -787,20 +783,17 @@ export default function HomePage() {
       {/* New Arrivals */}
       <section className="section-collections relative" aria-label="New Arrivals" style={{ backgroundColor: '#e0f2fe' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
-          <div className="section-header text-center mb-6">
-            <h2 className="section-title-themed font-extrabold mb-3 inline-block">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="section-title-themed font-extrabold inline-block">
               <span className="text-brand">New</span>
               <span className="text-accent"> Arrivals</span>
             </h2>
-            <div className="flex items-center justify-between">
-
-              {!isMobile && (
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setHomeNewStart(s => (s + (homeNewProducts.length || 1) - 1) % (homeNewProducts.length || 1))} aria-label="Previous" className="p-2 rounded bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setHomeNewStart(s => (s + 1) % (homeNewProducts.length || 1))} aria-label="Next" className="p-2 rounded bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
-                </div>
-              )}
-            </div>
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setHomeNewStart(s => (s + (homeNewProducts.length || 1) - 1) % (homeNewProducts.length || 1))} aria-label="Previous" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                <button onClick={() => setHomeNewStart(s => (s + 1) % (homeNewProducts.length || 1))} aria-label="Next" className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+              </div>
+            )}
           </div>
           {isMobile ? (
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
@@ -1040,22 +1033,20 @@ export default function HomePage() {
       {/* Budget Finds */}
       <section className="section-collections relative" aria-label="Budget Finds" style={{ backgroundColor: '#f1f5f9' }}>
         <div className="mb-6 max-w-7xl mx-auto px-4 sm:px-0">
-          <div className="section-header text-center mb-6">
-            <h2 className="section-title-themed font-extrabold mb-3 inline-block">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="section-title-themed font-extrabold inline-block">
               <span className="text-brand">Budget</span>
               <span className="text-accent"> Finds</span>
             </h2>
-            <div className="flex items-center justify-between">
-              {!isMobile && (
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))}
-                    aria-label="Previous"
-                    className="w-10 h-10  p-2 rounded-lg bg-white border border-slate-200 cursor-pointer">◀</button>
-                  <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next"
-                    className="p-2 rounded-lg bg-white border border-slate-200 ml-250 cursor-pointer">▶</button>
-                </div>
-              )}
-            </div>
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setBudgetStart(s => (s + (budgetProducts.length || 1) - 1) % (budgetProducts.length || 1))}
+                  aria-label="Previous"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&lt;</button>
+                <button onClick={() => setBudgetStart(s => (s + 1) % (budgetProducts.length || 1))} aria-label="Next"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-teal-500 text-teal-600 cursor-pointer hover:bg-teal-500 hover:text-white transition-colors font-bold text-lg">&gt;</button>
+              </div>
+            )}
           </div>
           {isMobile ? (
             <div className="category-grid-row" style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', overscrollBehaviorX: 'contain' }}>
