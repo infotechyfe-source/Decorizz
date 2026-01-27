@@ -1765,7 +1765,7 @@ export default function ProductDetailPage() {
                 </h3>
 
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                  {['Clear', 'Frosted', 'Mirror', 'Glossy'].map((type) => {
+                  {['Non-Light', 'Warm Light', 'White Light'].map((type) => {
                     const selected = selectedColor === type.toLowerCase();
                     return (
                       <button
